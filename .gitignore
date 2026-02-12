@@ -1,0 +1,43 @@
+## .NET / Visual Studio Build Artifacts
+[Dd]ebug/
+[Rr]elease/
+bin/
+bin\
+obj/
+publish/
+.buildlog
+
+## Blazor Specific
+wwwroot/dist/
+wwwroot/css/site.css.gz
+wwwroot/js/*.gz
+_framework/
+
+## VS Code Specific
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+## Environment & Secrets (Crucial!)
+appsettings.Development.json
+appsettings.Local.json
+.env
+.env.*
+secrets.json
+
+## User-Specific Files
+*.user
+*.userosscache
+*.sln.docstates
+
+## Node.js (If using Tailwind, MudBlazor, or custom JS builds)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+## Operating System Files
+.DS_Store
+Thumbs.db
