@@ -2,6 +2,7 @@
 [Dd]ebug/
 [Rr]elease/
 bin/
+bin\
 obj/
 publish/
 .buildlog
