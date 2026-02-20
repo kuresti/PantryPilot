@@ -1,10 +1,14 @@
 using BlazorApp.Components;
+using PantryPilot.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite("Data Source=pantry.db"));
 
 var app = builder.Build();
 
