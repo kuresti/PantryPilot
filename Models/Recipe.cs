@@ -9,9 +9,11 @@ namespace PantryPilot.Models
         public int CookTime { get; set; }  
         public int Servings { get; set; }
 
+        // Foreign Key and navigation to ApplicationUser
         public int UserId { get; set; }
-        public User User { get; set; }   
+        public ApplicationUser User { get; set; }   // Updated User to ApplicationUser to implement authentication
 
+        // Relationships
         public List<RecipeStep> Steps { get; set; }
         public List<RecipeIngredient> RecipeIngredients { get; set; }
         public List<MenuRecipe> MenuRecipes { get; set; }
