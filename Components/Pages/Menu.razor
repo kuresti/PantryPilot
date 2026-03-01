@@ -1,6 +1,6 @@
 @page "/menu"
+@rendermode InteractiveServer // for the header navigation
 @inject NavigationManager NavigationManager
-@rendermode InteractiveServer
 
 <PageTitle>Menu</PageTitle>
 
@@ -9,8 +9,5 @@
 <p>Welcome to PantryPilot</p>
 
 @code {
-    private void GoToAddRecipe()
-    {
-        NavigationManager.NavigateTo("/addrecipe");
-    }
+    
 }

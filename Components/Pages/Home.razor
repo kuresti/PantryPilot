@@ -1,8 +1,33 @@
 ﻿@page "/"
+@rendermode InteractiveServer // for the header navigation
 @inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Home</h1>
 
-Welcome to your new app.
+<button class="btn btn-primary" @onclick="GoToMenu">Menu</button>
+<button class="btn btn-primary" @onclick="GoToAddRecipe">Add Recipe</button>
+<button class="btn btn-primary" @onclick="GoToRecipeList">Recipes</button>
+<button class="btn btn-primary" @onclick="GoToGroceryList">Groceries</button>
+
+@code{
+    private void GoToMenu()
+    {
+        NavigationManager.NavigateTo("/menu");
+    }
+    private void GoToAddRecipe()
+    {
+        NavigationManager.NavigateTo("/addrecipe");
+    }
+
+    private void GoToRecipeList()
+    {
+        NavigationManager.NavigateTo("/recipelist");
+    }
+
+    private void GoToGroceryList()
+    {
+        NavigationManager.NavigateTo("/grocerylist");
+    }
+}
