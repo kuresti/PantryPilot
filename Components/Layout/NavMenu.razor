@@ -1,14 +1,22 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using BlazorApp.Components.ReusableUI
+@* This is the side-bar containing the Navigation Menu *@
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BlazorApp</a>
+        <a class="navbar-brand" href="">PantryPilot</a>
     </div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
+<div class="search-wrapper">
+    <SearchDropdown CustomClass="rounded-search"/>
+</div>
+
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
+            @* Match.All means it only highlights if the URL is exactly "/" *@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
@@ -34,7 +42,7 @@
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="addrecipe">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Add Recipe
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Recipe Form
             </NavLink>
         </div>
     </nav>

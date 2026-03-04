@@ -1,0 +1,33 @@
+
+.search-wrapper {
+    display: flex;
+    justify-content: center;
+    position: relative; /* the anchor point for the dropdown */
+    padding-top: 1rem;
+    width: 100%;
+}
+.search-input {
+    width: 90%;
+    padding: 12px 20px;
+    border-radius: 10px; /* This creates the pill shape */
+    border: 1px solid #636CA8; /* Using your Slate Blue */
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 8px rgba(99, 108, 168, 0.4);
+    border-color: #FF5722; /* Changes to your Vibrant Orange on focus */
+}
+
+
+/* the actual dropdown */
+.dropdown-list {
+    position: absolute; /* floats over the content (does not push content down to make space) */
+    top: 100%;          /* appears directly below the input box */
+    left: 0;
+    width: 100%;
+    z-index: 999;        /* ensures that it appears over all other elements */
+    background: white;
+    border: 1px solid #ccc;
+}
