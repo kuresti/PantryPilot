@@ -1,58 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">PantryPilot</a>
-
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    @* Match.All means it only highlights if the URL is exactly "/" *@
-                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                        Home
-                    </NavLink>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    @* Match.All means it only highlights if the URL is exactly "/" *@
-                    <NavLink class="nav-link" href="/menu">
-                        Menu
-                    </NavLink>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    @* Match.All means it only highlights if the URL is exactly "/" *@
-                    <NavLink class="nav-link" href="/addrecipe">
-                        Add Recipe
-                    </NavLink>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    @* Match.All means it only highlights if the URL is exactly "/" *@
-                    <NavLink class="nav-link" href="/recipelist">
-                        Recipe List
-                    </NavLink>
-                </li>
-            </ul>
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    @* Match.All means it only highlights if the URL is exactly "/" *@
-                    <NavLink class="nav-link" href="/grocerylist">
-                        Grocery List
-                    </NavLink>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
 <div class="page">
     <div class="sidebar">
         <NavMenu />
