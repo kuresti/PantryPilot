@@ -50,11 +50,12 @@
 @code {
     private RegisterModel registerModel = new();
     private string? errorMessage;
+    private string? successMessage;
 
     private async Task HandleRegister()
     {
         errorMessage = null;
-        Console.WriteLine("HandleRegister fired.");
+        successMessage = null;
 
         if (registerModel.Password != registerModel.ConfirmPassword)
         {
@@ -76,8 +77,8 @@
             return;
         }
 
-        await SignInManager.SignInAsync(user, false);
-            // forceLoad: true allows the user to immediately be signed in
+        successMessage = "Registration successful. Please log in.";
+        // forceLoad: true allows the user to immediately be signed in
             // and updates the nav
         Navigation.NavigateTo("/", forceLoad: true);
         

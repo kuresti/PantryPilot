@@ -48,7 +48,7 @@
             isPersistent: false,
             lockoutOnFailure: false);
 
-        if (result.Succeeded)
+        if (!result.Succeeded)
         {
             errorMessage = "Invalid email or password.";
             return;
