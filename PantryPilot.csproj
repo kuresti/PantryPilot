@@ -5,6 +5,10 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <!-- Explicity named the root namespace to clear up confusion from having
+         two different root namespaces. ie. BlazorApp, and PantryPilot -->
+    <RootNamespace>PantryPilot</RootNamespace>
+    <AssemblyName>PantryPilot</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

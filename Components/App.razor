@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@namespace PantryPilot.Components
+@using Microsoft.AspNetCore.Components.Authorization
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,14 +10,21 @@
     <ResourcePreloader />
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
     <link rel="stylesheet" href="@Assets["app.css"]" />
-    <link rel="stylesheet" href="@Assets["BlazorApp.styles.css"]" />
+    <link rel="stylesheet" href="@Assets["PantryPilot.styles.css"]" />
     <ImportMap />
     <link rel="icon" type="image/png" href="favicon.png" />
     <HeadOutlet />
 </head>
 
 <body>
-    <Routes />
+    @* Provides the current uer's authentication state information
+       to all Blazor components under it. This is what allows <AuthorizationView>
+       to work. Meaning that the user can see all recipes, menus, and grocery lists
+       that belong to that user.*@
+    <CascadingAuthenticationState>
+        <Routes />        
+    </CascadingAuthenticationState>
+
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
