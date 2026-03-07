@@ -1,13 +1,15 @@
 ﻿@using PantryPilot.Components.Account.Shared
 @namespace PantryPilot.Components
 @using Microsoft.AspNetCore.Components.Authorization
+@using PantryPilot.Components.ReusableUI
+
 
 
 <Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
             <NotAuthorized>
-                <PantryPilot.Components.Account.Shared.RedirectToLogin />
+                <RedirectToLogin />
             </NotAuthorized>
         </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />

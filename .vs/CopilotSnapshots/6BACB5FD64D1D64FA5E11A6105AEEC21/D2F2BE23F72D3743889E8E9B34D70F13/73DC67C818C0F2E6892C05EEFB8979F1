@@ -1,4 +1,4 @@
-{
+﻿{
   "ConnectionStrings": {
     "ApplicationDbContext": "Data Source=pantrypilot.db"
   },

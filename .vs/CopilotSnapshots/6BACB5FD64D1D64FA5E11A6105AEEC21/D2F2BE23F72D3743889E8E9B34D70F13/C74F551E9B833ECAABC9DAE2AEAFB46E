@@ -1,7 +1,4 @@
-{
-  "ConnectionStrings": {
-    "ApplicationDbContext": "Data Source=pantrypilot.db"
-  },
+﻿{
   "Logging": {
     "LogLevel": {
       "Default": "Information",
