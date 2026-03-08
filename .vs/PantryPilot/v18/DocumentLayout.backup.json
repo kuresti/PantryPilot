@@ -1,0 +1,160 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:components\\routes.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\components\\account\\identityrevalidatingauthenticationstateprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:components\\account\\identityrevalidatingauthenticationstateprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\components\\account\\identityredirectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:components\\account\\identityredirectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\components\\account\\identitynoopemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:components\\account\\identitynoopemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\pantrypilot.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:pantrypilot.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|c:\\users\\kures\\byui-classes\\cse325\\cse-325\\pantrypilot\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{78234D9A-F899-45BF-990B-1C3C82CD9FAC}|PantryPilot.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAkAAAAAAAAAAABRwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-07T21:45:38.673Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "appsettings.Development.json",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\appsettings.Development.json",
+              "RelativeToolTip": "appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-07T21:41:15.703Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Routes.razor",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Routes.razor",
+              "RelativeDocumentMoniker": "Components\\Routes.razor",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Routes.razor",
+              "RelativeToolTip": "Components\\Routes.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-07T21:31:21.593Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IdentityRedirectManager.cs",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Account\\IdentityRedirectManager.cs",
+              "RelativeDocumentMoniker": "Components\\Account\\IdentityRedirectManager.cs",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Account\\IdentityRedirectManager.cs",
+              "RelativeToolTip": "Components\\Account\\IdentityRedirectManager.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAcwDcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T21:29:45.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IdentityNoOpEmailSender.cs",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Account\\IdentityNoOpEmailSender.cs",
+              "RelativeDocumentMoniker": "Components\\Account\\IdentityNoOpEmailSender.cs",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Account\\IdentityNoOpEmailSender.cs",
+              "RelativeToolTip": "Components\\Account\\IdentityNoOpEmailSender.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAcwBUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T21:19:36.844Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T20:57:54.286Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IdentityRevalidatingAuthenticationStateProvider.cs",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Account\\IdentityRevalidatingAuthenticationStateProvider.cs",
+              "RelativeDocumentMoniker": "Components\\Account\\IdentityRevalidatingAuthenticationStateProvider.cs",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\Components\\Account\\IdentityRevalidatingAuthenticationStateProvider.cs",
+              "RelativeToolTip": "Components\\Account\\IdentityRevalidatingAuthenticationStateProvider.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAuwDEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T21:30:36.801Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PantryPilot",
+              "DocumentMoniker": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\PantryPilot.csproj",
+              "RelativeDocumentMoniker": "PantryPilot.csproj",
+              "ToolTip": "C:\\Users\\kures\\byui-classes\\CSE325\\CSE-325\\PantryPilot\\PantryPilot.csproj",
+              "RelativeToolTip": "PantryPilot.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-07T20:35:31.384Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
