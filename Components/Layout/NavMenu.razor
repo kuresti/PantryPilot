@@ -1,10 +1,16 @@
 ﻿@namespace PantryPilot.Components.Layout
+@using Microsoft.CodeAnalysis.CSharp
 @using PantryPilot.Components.ReusableUI
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using PantryPilot.Models
+@using SQLitePCL
 @* This is the side-bar containing the Navigation Menu *@
 
 @implements IDisposable
 @inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> UserManager
+
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">PantryPilot</a>
@@ -54,17 +60,17 @@
            The Login and Register links will only show if a user
            is NOT authenticated. The Logout link will show if the
            user IS authenticated. *@
-        <div class="nav-item px-3">
+        
             <AuthorizeView>
                 <NotAuthorized>
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="register">
+                        <NavLink class="nav-link" href="/Account/Register">
                             <span class="bi bi-person-plus-fill-nav-menu" aria-hidden="true"></span> Register
                         </NavLink>
                     </div>
 
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="login">
+                        <NavLink class="nav-link" href="/Account/Login">
                             <span aria-hidden="true"></span> Login
                         </NavLink>
                     </div>
@@ -73,37 +79,73 @@
                 <Authorized Context="authState">
 
                     <div class="nav-item px-3">
-                        <span class="nav-link disabled text-info">
+                        <span class="nav-link  text-light">
                             @* "@authState.User" gives access to the AuthenticationState
                                which contains an object called ClaimsPrincipal. This object
                                contains Identity.Name, Claims, Roles. That is how the line
                                below can print the user's name. *@
-                            Logged in as: 👤 @authState.User.Identity?.Name
+                            Logged in as: 👤 @(displayName ?? authState.User.Identity?.Name)
                         </span>
                     </div>
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="logout">
-                            <span aria-hidden="true"></span> Logout
+                        <NavLink class="nav-link" href="/Account/Manage/Index">
+                            <span aria-hidden="true"></span> Account
                         </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                       <form method="post" action="/Account/Logout">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="returnUrl" value="" />
+                            <button type="submit" class="nav-link btn btn-link text-start w-100">
+                                Logout
+                            </button>
+                       </form>
+
                     </div>
                 </Authorized>
             </AuthorizeView>
-        </div>
+        
     </nav>
 </div>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
     private string? currentUrl;
-    protected override void OnInitialized()
+    private string? displayName;
+    protected override async Task OnInitializedAsync()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+        await LoadDisplayNameAsync();
     }
 
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
         currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
-        StateHasChanged();
+        await LoadDisplayNameAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadDisplayNameAsync()
+    {
+        if (AuthenticationStateTask is null)
+        {
+            displayName = null;
+            return;
+        }
+
+        var authState = await AuthenticationStateTask;
+        var principal = authState.User;
+
+        if (principal.Identity?.IsAuthenticated != true)
+        {
+            displayName = null;
+            return;
+        }
+
+        var user = await UserManager.GetUserAsync(principal);
+        displayName = user?.Name;
     }
 
     public void Dispose()
