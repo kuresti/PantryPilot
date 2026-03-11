@@ -1,0 +1,37 @@
+@* This is a reusable component for a Search Box with a Dropdown *@
+
+<div class="search-wrapper">
+    @* take the user's input *@
+    <input type="text" class="search-input" @bind-value="SearchQuery" @bind-value:event="oninput" />
+
+    @* if the Dropdown Search Box is selected then show *@
+    @if (ShouldShowDropdown)
+    {
+        @* the list of items *@
+        <ul class="dropdown-list">
+            @foreach (var item in FilteredItems)
+            {
+                <li>@item</li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    [Parameter] public string CustomClass { get; set; } = "";
+    private string SearchQuery { get; set; } = "";
+
+    /* =====================================================
+       The line below this comment is just placeholder logic.
+       It will need to be integrated with the database.
+    ===================================================== */
+    private List<string> AllItems = new() { "Omelette", "Pancakes", "Tacos" };
+
+    // The logic: Filter the list based on the search query
+    private IEnumerable<string> FilteredItems => AllItems
+        .Where(i => i.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase));
+
+    // Only show the dropdown if the user has typed something and matches exist
+    private bool ShouldShowDropdown => !string.IsNullOrWhiteSpace(SearchQuery) 
+                                       && FilteredItems.Any();
+}

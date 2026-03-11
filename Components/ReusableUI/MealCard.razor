@@ -1,0 +1,22 @@
+@* This is a reusable component for the meal cards on the Menu Page *@
+
+<div class="meal-card">
+    <div class="meal-type">@Type</div>
+    <h2 class="meal-name">@Name</h2>
+    
+    <ul class="meal-features">
+        @foreach (var feature in Features)
+        {
+            <li>@feature</li>
+        }
+    </ul>
+
+    <button class="btn-cook" @onclick="OnCookClicked">Cook</button>
+</div>
+
+@code {
+    [Parameter] public string Type { get; set; } = "Meal";
+    [Parameter] public string Name { get; set; } = "Recipe Name";
+    [Parameter] public List<string> Features { get; set; } = new();
+    [Parameter] public EventCallback OnCookClicked { get; set; }
+}
