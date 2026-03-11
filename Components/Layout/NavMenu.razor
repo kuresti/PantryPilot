@@ -1,50 +1,32 @@
 ﻿@using BlazorApp.Components.ReusableUI
 @* This is the side-bar containing the Navigation Menu *@
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">PantryPilot</a>
+<div class="navbar px-3">
+    @* Brand on the left *@
+    <a class="navbar-brand" href="">PantryPilot</a>
+
+    @* Right aligned section for Search and Links *@
+    <div class="nav-elements ms-auto d-flex align-items-center">
+
+        @* Main Navigation Links *@
+        <nav class="d-flex align-items-center me-4">
+            <div class="nav-item">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="menu">Menu</NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="grocerylist">Groceries</NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="recipelist">Recipes</NavLink>
+            </div>
+        </nav>
+
+        @* Search Bar with a specific width constraint *@
+        <div class="header-search">
+            <SearchDropdown CustomClass="rounded-search m-0 p-0" />
+        </div>
     </div>
 </div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="search-wrapper">
-    <SearchDropdown CustomClass="rounded-search"/>
-</div>
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            @* Match.All means it only highlights if the URL is exactly "/" *@
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="menu">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Menu
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="grocerylist">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Groceries
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="recipelist">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Recipes
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="addrecipe">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Recipe Form
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
