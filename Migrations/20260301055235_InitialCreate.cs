@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BlazorApp.Migrations
+namespace PantryPilot.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

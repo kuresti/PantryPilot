@@ -7,7 +7,7 @@ using PantryPilot.Data;
 
 #nullable disable
 
-namespace BlazorApp.Migrations
+namespace PantryPilot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

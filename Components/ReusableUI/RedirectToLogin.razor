@@ -1,0 +1,10 @@
+@namespace PantryPilot.Components.ReusableUI
+
+@inject NavigationManager Navigation
+
+@code {
+    protected override void OnInitialized()
+    {
+        Navigation.NavigateTo("/login");
+    }
+}
