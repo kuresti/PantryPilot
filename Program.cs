@@ -16,6 +16,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=pantry.db"));
 
+builder.Services.AddScoped<RecipeService>();
+
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
 
