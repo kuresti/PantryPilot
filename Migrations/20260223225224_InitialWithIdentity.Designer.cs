@@ -8,7 +8,7 @@ using PantryPilot.Data;
 
 #nullable disable
 
-namespace BlazorApp.Migrations
+namespace PantryPilot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260223225224_InitialWithIdentity")]
