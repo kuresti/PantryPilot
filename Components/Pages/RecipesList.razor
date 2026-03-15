@@ -1,13 +1,51 @@
 @page "/recipelist"
-@rendermode InteractiveServer // for the header navigation
+@using BlazorApp.Components.ReusableUI
+@rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@inject ApplicationDbContext Db
 
 <PageTitle>RecipeList</PageTitle>
 
-<h1>Recipes</h1>
+<div class="menu-container">
+    <header class="menu-header">
+        @* <p class="tagline">Tagline</p> *@
+        <h1 class="main-title">Recipe List</h1>
+        @* <p class="description">Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.</p> *@
 
-<p>List all recipes</p>
+        @* <div class="view-switcher">
+            <button class="view-btn active">Daily</button>
+            <button class="view-btn">Weekly</button>
+            <button class="view-btn">Monthly</button>
+        </div> *@
+
+        @* <p class="current-date">Date: <span>April 10, 2026</span></p> *@
+    </header>
+
+    <div class="recipe-list">
+        @foreach (var recipe in recipes)
+        {
+            <FullRecipeCard recipe="@recipe" />
+        }
+
+        @* <MealCard Type="Breakfast"
+                  Name="Blueberry Pancakes"
+                  Features="@(new List<string> { "High Protein", "Gluten Free", "15 mins" })" />
+        
+        <MealCard Type="Lunch" 
+                  Name="Chicken Caesar" 
+                  Features="@(new List<string> { "Fresh Greens", "Low Carb", "10 mins" })" />
+        
+        <MealCard Type="Dinner" 
+                  Name="Grilled Salmon" 
+                  Features="@(new List<string> { "Omega-3", "Heart Healthy", "25 mins" })" /> *@
+    </div>
+</div>
 
 @code {
+    private List<Recipe> recipes = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        recipes = await Db.Recipes.ToListAsync();
+    }
 }
