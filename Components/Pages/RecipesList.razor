@@ -2,7 +2,7 @@
 @using BlazorApp.Components.ReusableUI
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@inject ApplicationDbContext Db
+@* @inject ApplicationDbContext Db *@
 
 <PageTitle>RecipeList</PageTitle>
 
@@ -22,10 +22,10 @@
     </header>
 
     <div class="recipe-list">
-        @foreach (var recipe in recipes)
+        @* @foreach (var recipe in recipes)
         {
             <FullRecipeCard recipe="@recipe" />
-        }
+        } *@
 
         @* <MealCard Type="Breakfast"
                   Name="Blueberry Pancakes"
@@ -42,10 +42,10 @@
 </div>
 
 @code {
-    private List<Recipe> recipes = new();
+    @* private List<Recipe> recipes = new(); *@
 
-    protected override async Task OnInitializedAsync()
+    @* protected override async Task OnInitializedAsync()
     {
         recipes = await Db.Recipes.ToListAsync();
-    }
+    } *@
 }
