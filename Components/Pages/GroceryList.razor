@@ -1,5 +1,10 @@
 @page "/grocerylist"
 @rendermode InteractiveServer // for the header navigation
+@using Microsoft.AspNetCore.Authorization
+
+@* Added to mark the page as protected
+   Allows only logged in user to access the page *@
+@attribute [Authorize]
 @inject NavigationManager NavigationManager
 
 <PageTitle>GroceryList</PageTitle>

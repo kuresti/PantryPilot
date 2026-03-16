@@ -1,8 +1,13 @@
 @page "/recipelist"
 @rendermode InteractiveServer // for the header navigation
 @using PantryPilot.Data
+@using Microsoft.AspNetCore.Authorization
 @inject RecipeService RecipeService
 @inject NavigationManager NavigationManager
+
+@* Added to mark the page as protected
+   Allows only logged in user to access the page *@
+@attribute [Authorize]
 
 <PageTitle>RecipeList</PageTitle>
 
