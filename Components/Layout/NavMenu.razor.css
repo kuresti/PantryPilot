@@ -1,61 +1,46 @@
-﻿/* PantryPilot Sidebar Branding */
-
-.navbar-toggler {
-    appearance: none;
-    cursor: pointer;
-    width: 3.5rem;
-    height: 2.5rem;
+/* Main Header Container */
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between; /* Logo on left, Search/Links on right */
+    padding: 0.5rem 1rem;
+    background-color: #636CA8;
     color: white;
-    position: absolute;
-    top: 0.5rem;
-    right: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    /* Updated background with Slate Blue tint */
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") no-repeat center/1.75rem rgba(99, 108, 168, 0.2);
-}
-
-.navbar-toggler:checked {
-    /* Using Slate Blue for the toggled state */
-    background-color: #636CA8;
-}
-
-.top-row {
-    min-height: 3.5rem;
-    /* Primary Brand Color: Slate Blue */
-    background-color: #636CA8;
+    width: 100%;
 }
 
 .navbar-brand {
-    font-size: 1.1rem;
-    /* Brand Font */
+    font-size: 1.75rem;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     color: white !important;
+    text-decoration: none;
+}
+
+/* Horizontal Menu Wrapper */
+.nav-menu-container {
+    display: flex;
+    flex-direction: row; /* Force horizontal */
+    align-items: center;
+    gap: 1rem;
 }
 
 .nav-item {
-    font-size: 0.9rem;
-    padding-bottom: 0.5rem;
-    /* Content Font */
+    font-size: 1.4rem;
     font-family: 'Libre Franklin', sans-serif;
+    list-style: none; /* Remove bullet points */
 }
 
-/* ... (bi-icon styles remain the same) ... */
-
 .nav-item ::deep .nav-link {
-    color: #E0E0E0; /* Light Grey from your palette */
-    background: none;
-    border: none;
+    color: #E0E0E0;
+    padding: 0.5rem 0.75rem;
+    text-decoration: none;
     border-radius: 4px;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    line-height: 3rem;
-    width: 100%;
     transition: background-color 0.2s;
 }
 
-/* Active State: Using your Vibrant Orange */
+/* The vibrant orange for Active State */
 .nav-item ::deep a.active {
     background-color: #FF5722;
     color: white;
@@ -63,9 +48,167 @@
 }
 
 .nav-item ::deep .nav-link:hover {
-    /* Hover state using a subtle Slate Blue tint */
-    background-color: rgba(99, 108, 168, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
     color: white;
 }
 
-/* ... (Responsive logic remains the same) ... */
+/* Hide the toggler for now */
+.navbar-toggler {
+    display: none;
+}
+
+/* Container for Search + Nav */
+.nav-elements {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;     /* Prevents the links from squishing */
+}
+
+/* for seeing the element locations */
+/* .nav-elements > * { border: 1px solid red; } */
+
+/* Add spacing between the last nav item and the search bar */
+nav.me-4 {
+    margin-right: 1.5rem !important;
+}
+
+/* Constrain the Search Bar so it doesn't take over the header */
+.header-search {
+    display: flex;
+    align-items: center;
+    height: 100%; /* Fill the navbar height */
+}
+
+/* Optional: Vertical separator between Nav and Search */
+/* nav::after {
+    content: "";
+    height: 20px;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin-left: 1rem;
+} */
+
+/* Ensure the SearchDropdown inside doesn't overflow */
+.header-search ::deep input {
+    height: 2.2rem;
+    font-size: 0.85rem;
+}
+.header-search ::deep > div {
+    display: flex !important;
+    align-items: center !important;
+    height: 100%;
+}
+
+/* Horizontal Nav specific styles */
+nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nav-item ::deep .nav-link {
+    display: flex;
+    align-items: center;
+    height: 2.8rem; /* Must match the search input height exactly */
+    padding: 0 0.75rem;
+    margin: 0;
+}
+
+/* Target the input inside the SearchDropdown component */
+.header-search ::deep .rounded-search {
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0 1rem;
+    height: 2.8rem;       /* Increased from 2.2rem to match larger nav text */
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+/* Subtle glow effect when searching your pantry */
+.header-search ::deep .rounded-search:focus {
+    background-color: white;
+    color: #333;
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 87, 34, 0.5); /* Your Vibrant Orange glow */
+}
+
+.nav-elements {
+    display: flex;
+    align-items: center; /* This is the "magic" vertical alignment */
+}
+
+/* Force both elements to have a consistent line-height */
+.nav-link, .header-search ::deep input {
+    line-height: normal;
+    display: flex;
+    align-items: center;
+}
+
+/* This targets the top-level element inside the SearchDropdown component */
+.header-search ::deep > div, 
+.header-search ::deep > form {
+    height: 100%;
+    display: flex;
+    align-items: center; /* This forces the input to the vertical center */
+    margin: 0;
+}
+
+/* Ensure the input itself doesn't have an old 'top' margin from the sidebar layout */
+.header-search ::deep input {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+@media (max-width: 992px) {
+    .navbar-toggler {
+        display: block; /* Show the hamburger */
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Style for the 'hamburger' lines */
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    /* When the menu is NOT collapsed, stack items vertically */
+    .nav-elements:not(.collapse) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;    /* Aligns links left on mobile */
+        width: 100%;
+        padding: 1rem;
+        /* background-color: #636CA8; */
+    }
+
+    .nav-elements nav {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .nav-item {
+        width: 100%;
+        padding: 0.5rem 0;
+    }
+}
+
+/* Hide the toggler on large screens */
+@media (min-width: 993px) {
+    .navbar-toggler {
+        display: none;
+    }
+    .nav-elements.collapse {
+        display: flex !important; /* Always show links on desktop */
+    }
+}
