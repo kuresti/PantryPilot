@@ -17,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=pantry.db"));
 
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<IngredientService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();

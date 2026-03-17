@@ -1,0 +1,78 @@
+@page "/ingredientform"
+@page "/ingredientform/{id:int}"
+@rendermode InteractiveServer
+
+@using PantryPilot.Data
+@using PantryPilot.Models
+
+@inject IngredientService IngredientService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Ingredient Form</PageTitle>
+
+<h1>@(IsEditMode ? "Edit Ingredient" : "Add Ingredient")</h1>
+
+@if (ingredient == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <!-- Temporary input for testing -->
+    <input @bind="ingredient.Name" placeholder="Ingredient name" />
+
+    <button @onclick="SaveIngredient">Save</button>
+    <button @onclick="Cancel">Cancel</button>
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    private Ingredient? ingredient;
+    private bool IsEditMode => Id.HasValue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditMode)
+        {
+            ingredient = await IngredientService.GetIngredient(Id!.Value);
+
+            if (ingredient == null)
+            {
+                NavigationManager.NavigateTo("/ingredients");
+                return;
+            }
+        }
+        else
+        {
+            ingredient = new Ingredient
+            {
+                Name = ""
+            };
+        }
+    }
+
+    private async Task SaveIngredient()
+    {
+        if (ingredient == null)
+        {
+            return;
+        }
+
+        if (IsEditMode)
+        {
+            await IngredientService.UpdateIngredient(ingredient);
+        }
+        else
+        {
+            await IngredientService.CreateIngredient(ingredient);
+        }
+
+        NavigationManager.NavigateTo("/ingredients");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/ingredients");
+    }
+}

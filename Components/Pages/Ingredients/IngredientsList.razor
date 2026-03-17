@@ -1,0 +1,81 @@
+@page "/ingredients"
+@rendermode InteractiveServer
+
+@using PantryPilot.Data
+@using PantryPilot.Models
+
+@inject IngredientService IngredientService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Ingredient</PageTitle>
+
+<h1>Ingredients</h1>
+<h1 style="color:red">Looking for the real INGREDIENTS page</h1>
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <button @onclick="AddIngredient">Add Ingredient</button>
+    <button @onclick='() => testMessage = "clicked!"'>Test</button>
+
+    <p>@testMessage</p>
+
+    @if (ingredients.Count ==0)
+    {
+        <p>No ingredients yet.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ingredient in ingredients)
+                {
+                    <tr>
+                        <td>@ingredient.Name</td>
+                        <td>
+                            <button @onclick="() => EditIngredient(ingredient.Id)">Edit</button>
+                            <button @onclick="() => DeleteIngredient(ingredient.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    private string testMessage = "";
+    private bool isLoading = true;
+    private List<Ingredient> ingredients = new ();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ingredients = await IngredientService.GetAllIngredients();
+        isLoading = false;
+    }
+
+    private void AddIngredient()
+    {
+        NavigationManager.NavigateTo("/ingredientform");
+    }
+
+    private void EditIngredient(int id)
+    {
+        NavigationManager.NavigateTo($"/ingredientform/{id}");
+    }
+
+    private async Task DeleteIngredient(int id)
+    {
+        await IngredientService.DeleteIngredient(id);
+        ingredients = await IngredientService.GetAllIngredients();
+    }
+}
