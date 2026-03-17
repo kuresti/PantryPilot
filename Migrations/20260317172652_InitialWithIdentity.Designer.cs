@@ -11,8 +11,8 @@ using PantryPilot.Data;
 namespace PantryPilot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260317043816_InitialClean")]
-    partial class InitialClean
+    [Migration("20260317172652_InitialWithIdentity")]
+    partial class InitialWithIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

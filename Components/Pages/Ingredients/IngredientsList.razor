@@ -10,7 +10,6 @@
 <PageTitle>Ingredient</PageTitle>
 
 <h1>Ingredients</h1>
-<h1 style="color:red">Looking for the real INGREDIENTS page</h1>
 
 @if (isLoading)
 {
@@ -19,9 +18,6 @@
 else
 {
     <button @onclick="AddIngredient">Add Ingredient</button>
-    <button @onclick='() => testMessage = "clicked!"'>Test</button>
-
-    <p>@testMessage</p>
 
     @if (ingredients.Count ==0)
     {
@@ -53,7 +49,6 @@ else
 }
 
 @code {
-    private string testMessage = "";
     private bool isLoading = true;
     private List<Ingredient> ingredients = new ();
 

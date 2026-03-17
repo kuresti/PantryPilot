@@ -1,8 +1,12 @@
 @page "/recipelist"
 @rendermode InteractiveServer // for the header navigation
+@using Microsoft.AspNetCore.Authorization
 @using PantryPilot.Data
 @inject RecipeService RecipeService
 @inject NavigationManager NavigationManager
+
+<!-- Redirects to Log In while logged out -->
+@attribute [Authorize]
 
 <PageTitle>RecipeList</PageTitle>
 
