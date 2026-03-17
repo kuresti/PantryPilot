@@ -1,0 +1,21 @@
+@* This is a reusable component for the recipe cards on the RecipeList Page *@
+@using PantryPilot.Models
+
+<div class="recipe-card">
+    @* using '?' helps prevent crashing bc it waits for the data to load before reading *@
+    <h3>@recipe?.Name</h3> 
+    <p>@recipe?.Description</p>
+    <p>@recipe?.PrepTime</p>
+    <p>@recipe?.CookTime</p>
+    <p>@recipe?.Steps</p>
+    <p>@recipe?.RecipeIngredients</p>
+
+    <ul class="ingredients-list">
+
+    </ul>
+</div>
+
+@code {
+    [Parameter] // reference PantryPilot/Models/Recipe.cs model
+    public Recipe recipe { get; set; }
+}
