@@ -1,4 +1,6 @@
 ﻿using PantryPilot.Components;
+using PantryPilot.Services.Interfaces;
+using PantryPilot.Services;
 using PantryPilot.Data;
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Models;
@@ -16,7 +18,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=pantry.db"));
 
-builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
