@@ -1,11 +1,6 @@
 @page "/recipelist"
 @rendermode InteractiveServer // for the header navigation
-@using PantryPilot.Data
-
-@* Added to prevent non-authenticated users
-   from viewing this page *@
-@using Microsoft.AspNetCore.Authorization
-@attribute [Authorize];
+@using PantryPilot.Services;
 @inject RecipeService RecipeService
 @inject NavigationManager NavigationManager
 
