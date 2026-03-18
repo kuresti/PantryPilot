@@ -1,6 +1,7 @@
 ﻿using PantryPilot.Components;
 using PantryPilot.Data;
 using PantryPilot.Services;
+using PantryPilot.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Models;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
-builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
