@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Models;
+using PantryPilot.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace PantryPilot.Data
+namespace PantryPilot.Services
 {
     public class RecipeService
     {

@@ -1,5 +1,6 @@
 ﻿using PantryPilot.Components;
 using PantryPilot.Data;
+using PantryPilot.Services;
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Models;
 using Microsoft.AspNetCore.Identity;
