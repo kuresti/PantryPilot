@@ -3,10 +3,11 @@ using PantryPilot.Models;
 using PantryPilot.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
+using PantryPilot.Services.Interfaces;
 
 namespace PantryPilot.Services
 {
-    public class RecipeService
+    public class RecipeService : IRecipeService
     {
         private readonly ApplicationDbContext _context;
         private readonly AuthenticationStateProvider _authStateProvider;
