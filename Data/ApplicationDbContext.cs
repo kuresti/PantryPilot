@@ -25,5 +25,7 @@ namespace PantryPilot.Data
         public DbSet<MenuRecipe> MenuRecipes { get; set; }
         public DbSet<GroceryList> GroceryLists { get; set; }
         public DbSet<GroceryListItem> GroceryListItems { get; set; }
+        public DbSet<MenuDay> MenuDays { get; set; }
+        public DbSet<WeeklyMenu> WeeklyMenus { get; set; }
     }
 }
