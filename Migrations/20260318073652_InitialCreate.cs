@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PantryPilot.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialWithIdentity : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,7 +41,7 @@ namespace PantryPilot.Migrations
                     PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
                     SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
@@ -64,6 +64,18 @@ namespace PantryPilot.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ingredients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WeeklyMenus",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WeeklyMenus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,8 +124,8 @@ namespace PantryPilot.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -122,6 +134,25 @@ namespace PantryPilot.Migrations
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserPasskeys",
+                columns: table => new
+                {
+                    CredentialId = table.Column<byte[]>(type: "BLOB", maxLength: 1024, nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Data = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserPasskeys", x => x.CredentialId);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserPasskeys_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -157,8 +188,8 @@ namespace PantryPilot.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -235,6 +266,28 @@ namespace PantryPilot.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MenuDays",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    BreakfastRecipeId = table.Column<int>(type: "INTEGER", nullable: true),
+                    LunchRecipeId = table.Column<int>(type: "INTEGER", nullable: true),
+                    DinnerRecipeId = table.Column<int>(type: "INTEGER", nullable: true),
+                    WeeklyMenuId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MenuDays", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MenuDays_WeeklyMenus_WeeklyMenuId",
+                        column: x => x.WeeklyMenuId,
+                        principalTable: "WeeklyMenus",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -362,6 +415,11 @@ namespace PantryPilot.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserPasskeys_UserId",
+                table: "AspNetUserPasskeys",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
@@ -391,6 +449,11 @@ namespace PantryPilot.Migrations
                 name: "IX_GroceryLists_UserId",
                 table: "GroceryLists",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MenuDays_WeeklyMenuId",
+                table: "MenuDays",
+                column: "WeeklyMenuId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MenuRecipes_MenuId",
@@ -441,6 +504,9 @@ namespace PantryPilot.Migrations
                 name: "AspNetUserLogins");
 
             migrationBuilder.DropTable(
+                name: "AspNetUserPasskeys");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUserRoles");
 
             migrationBuilder.DropTable(
@@ -448,6 +514,9 @@ namespace PantryPilot.Migrations
 
             migrationBuilder.DropTable(
                 name: "GroceryListItems");
+
+            migrationBuilder.DropTable(
+                name: "MenuDays");
 
             migrationBuilder.DropTable(
                 name: "MenuRecipes");
@@ -463,6 +532,9 @@ namespace PantryPilot.Migrations
 
             migrationBuilder.DropTable(
                 name: "GroceryLists");
+
+            migrationBuilder.DropTable(
+                name: "WeeklyMenus");
 
             migrationBuilder.DropTable(
                 name: "Menus");

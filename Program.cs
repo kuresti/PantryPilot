@@ -16,7 +16,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=pantry.db"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 
