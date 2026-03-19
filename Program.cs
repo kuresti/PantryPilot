@@ -18,6 +18,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
+builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<RecipeIngredientService>();
+builder.Services.AddScoped<IngredientService>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 // Adds authentication state

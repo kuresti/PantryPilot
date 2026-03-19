@@ -2,6 +2,11 @@
 @using PantryPilot.Components.ReusableUI
 @rendermode InteractiveServer
 
+@* Added to prevent non-authenticated users
+   from viewing this page *@
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize];
+
 @* These are needed for menu planning feature *@
 @using PantryPilot.Models
 @using PantryPilot.Components.MenuPlanner
