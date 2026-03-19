@@ -19,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<RecipeIngredientService>();
+builder.Services.AddScoped<IngredientService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
