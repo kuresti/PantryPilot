@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<RecipeStepService>();
 builder.Services.AddScoped<RecipeIngredientService>();
 builder.Services.AddScoped<IngredientService>();
 
