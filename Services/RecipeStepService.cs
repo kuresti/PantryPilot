@@ -34,7 +34,7 @@ public class RecipeStepService
     public async Task DeleteAsync(int id)
     {
         var recipeStep = await _context.RecipeSteps.FindAsync(id);
-        if (recipeStep ! null)
+        if (recipeStep != null)
         {
             _context.RecipeSteps.Remove(recipeStep);
             await _context.SaveChangesAsync();
