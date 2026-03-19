@@ -1,37 +1,61 @@
 @page "/menu"
 @using PantryPilot.Components.ReusableUI
 @rendermode InteractiveServer
+
+@* These are needed for menu planning feature *@
+@using PantryPilot.Models
+@using PantryPilot.Components.MenuPlanner
+@using PantryPilot.Services.Interfaces
+@using System.ComponentModel.Design
+
+@inject IRecipeService RecipeService
+@inject IMenuService MenuService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Menu</PageTitle>
 
-<div class="menu-container">
-    <header class="menu-header">
-        <p class="tagline">Tagline</p>
-        <h1 class="main-title">Menu</h1>
-        <p class="description">Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.</p>
+<h3>Menu</h3>
 
-        <div class="view-switcher">
-            <button class="view-btn active">Daily</button>
-            <button class="view-btn">Weekly</button>
-            <button class="view-btn">Monthly</button>
+<div class="planner-layout">
+    <RecipeList Recipes="recipes"   
+                OnDragStarted="HandleDragStarted" />
+
+    <div class="menu-container">
+        <header class="menu-header">
+            <p class="tagline">Tagline</p>
+            <h1 class="main-title">Menu</h1>
+            <p class="description">Drag recipes into Breakfast, Lunch, and Dinner.</p>
+
+            <div class="view-switcher">
+                <button class="view-btn active">Daily</button>
+                <button class="view-btn">Weekly</button>
+                <button class="view-btn">Monthly</button>
+            </div>
+
+            <p class="current-date">Date: <span>@selectedDate.ToString("MMMM d, yyyy")</span></p>
+        </header>
+
+        <div class="meal-grid">
+            <MealCard Date="selectedDate"
+                    MealType="MealType.Breakfast"
+                    RecipeId="menuDay?.BreakfastRecipeId"
+                    OnRecipeDropped="HandleRecipeDropped"
+                    OnRecipeClicked="HandleRecipeClicked"/>
+            
+            <MealCard Date="selectedDate"
+                    MealType="MealType.Lunch"
+                    RecipeId="menuDay?.LunchRecipeId"
+                    OnRecipeDropped="HandleRecipeDropped"
+                    OnRecipeClicked="HandleRecipeClicked" />
+            
+            <MealCard Date="selectedDate"
+                    MealType="MealType.Dinner"
+                    RecipeId="menuDay?.DinnerRecipeId"
+                    OnRecipeDropped="HandleRecipeDropped"
+                    OnRecipeClicked="HandleRecipeClicked" />
         </div>
 
-        <p class="current-date">Date: <span>April 10, 2026</span></p>
-    </header>
-
-    <div class="meal-grid">
-        <MealCard Type="Breakfast"
-                  Name="Blueberry Pancakes"
-                  Features="@(new List<string> { "High Protein", "Gluten Free", "15 mins" })" />
-        
-        <MealCard Type="Lunch" 
-                  Name="Chicken Caesar" 
-                  Features="@(new List<string> { "Fresh Greens", "Low Carb", "10 mins" })" />
-        
-        <MealCard Type="Dinner" 
-                  Name="Grilled Salmon" 
-                  Features="@(new List<string> { "Omega-3", "Heart Healthy", "25 mins" })" />
+        <RecipeDetailsPanel SelectedRecipe="selectedRecipe" />
     </div>
 </div>
 
