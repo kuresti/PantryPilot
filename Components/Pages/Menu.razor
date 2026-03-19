@@ -5,16 +5,17 @@
 @* Added to prevent non-authenticated users
    from viewing this page *@
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize];
+@attribute [Authorize]
 
 @* These are needed for menu planning feature *@
 @using PantryPilot.Models
-@using PantryPilot.Components.MenuPlanner
+@* @using PantryPilot.Components.MenuPlanner *@
 @using PantryPilot.Services.Interfaces
-@using System.ComponentModel.Design
+@* @using System.ComponentModel.Design *@
+@using PantryPilot.Components.ReusableUI
 
 @inject IRecipeService RecipeService
-@inject IMenuService MenuService
+@* @inject IMenuService MenuService *@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Menu</PageTitle>
@@ -22,7 +23,7 @@
 <h3>Menu</h3>
 
 <div class="planner-layout">
-    <RecipeList Recipes="recipes"   
+    <MenuRecipeList Recipes="recipes"   
                 OnDragStarted="HandleDragStarted" />
 
     <div class="menu-container">
@@ -43,19 +44,19 @@
         <div class="meal-grid">
             <MealCard Date="selectedDate"
                     MealType="MealType.Breakfast"
-                    RecipeId="menuDay?.BreakfastRecipeId"
+                    RecipeId="breakfastRecipeId"
                     OnRecipeDropped="HandleRecipeDropped"
                     OnRecipeClicked="HandleRecipeClicked"/>
             
             <MealCard Date="selectedDate"
                     MealType="MealType.Lunch"
-                    RecipeId="menuDay?.LunchRecipeId"
+                    RecipeId="lunchRecipeId"
                     OnRecipeDropped="HandleRecipeDropped"
                     OnRecipeClicked="HandleRecipeClicked" />
             
             <MealCard Date="selectedDate"
                     MealType="MealType.Dinner"
-                    RecipeId="menuDay?.DinnerRecipeId"
+                    RecipeId="dinnerRecipeId"
                     OnRecipeDropped="HandleRecipeDropped"
                     OnRecipeClicked="HandleRecipeClicked" />
         </div>
@@ -65,5 +66,56 @@
 </div>
 
 @code {
-    
+    private List<Recipe> recipes = new();
+    private Recipe? selectedRecipe;
+    private int? draggedRecipeId;
+
+    private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
+
+    // Temporary local state until MenuService is implemented
+    // TODO: Replace temporary meal assignment state with MenuService when implemented
+    private int? breakfastRecipeId;
+    private int? lunchRecipeId;
+    private int? dinnerRecipeId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipes = await RecipeService.GetUserRecipes();
+    }
+
+    private Task HandleDragStarted(int recipeId)
+    {
+        draggedRecipeId = recipeId;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleRecipeDropped((DateOnly date, MealType mealType) args)
+    {
+        if (draggedRecipeId is null)
+            return Task.CompletedTask;
+
+        switch (args.mealType)
+        {
+            case MealType.Breakfast:
+                breakfastRecipeId = draggedRecipeId.Value;
+                break;
+
+            case MealType.Lunch:
+                lunchRecipeId = draggedRecipeId.Value;
+                break;
+
+            case MealType.Dinner:
+                dinnerRecipeId = draggedRecipeId.Value;
+                break;
+        }
+
+        draggedRecipeId = null;
+        return Task.CompletedTask;
+    }
+
+    private async Task HandleRecipeClicked(int recipeId)
+    {
+        selectedRecipe = await RecipeService.GetRecipe(recipeId);
+    }
+
 }
