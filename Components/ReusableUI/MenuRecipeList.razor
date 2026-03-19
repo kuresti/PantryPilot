@@ -1,0 +1,33 @@
+@* This component created the draggable Recipe list
+   for the Menu page. It is not a page and should 
+   not have @page with a route at the top.*@
+
+@using PantryPilot.Components.Pages
+@using PantryPilot.Models
+
+<div class="recipe-list">
+    <h4>Recipes</h4>
+
+    @if (Recipes is null || !Recipes.Any())
+    {
+        <p><em>No recipes available</em></p>
+    }
+    else
+    {
+        @foreach (var recipe in Recipes)
+        {
+            <div class="recipe-card"
+                 draggable="true"
+                 @ondragstart="() => OnDragStarted.InvokeAsync(recipe.Id)">
+                 <h5>@recipe.Name</h5>
+                 <p>Prep: @recipe.PrepTime | Cook: @recipe.CookTime</p>
+                 <p>Servings: @recipe.Servings</p>
+                 </div>
+        }
+    }     
+</div>
+
+@code {
+    [Parameter] public List<Recipe> Recipes { get; set; } = new();
+    [Parameter] public EventCallback<int> OnDragStarted { get; set; }
+}
