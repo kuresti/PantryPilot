@@ -1,6 +1,11 @@
 @page "/menu"
 @using PantryPilot.Components.ReusableUI
 @rendermode InteractiveServer
+
+@* Added to prevent non-authenticated users
+   from viewing this page *@
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize];
 @inject NavigationManager NavigationManager
 
 <PageTitle>Menu</PageTitle>
