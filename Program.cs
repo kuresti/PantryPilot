@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationDbContext")));
 
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<RecipeIngredientService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
