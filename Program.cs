@@ -21,6 +21,7 @@ builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<RecipeStepService>();
 builder.Services.AddScoped<RecipeIngredientService>();
 builder.Services.AddScoped<IngredientService>();
+builder.Services.AddScoped<MenuService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
