@@ -22,6 +22,10 @@ builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<RecipeStepService>();
 builder.Services.AddScoped<RecipeIngredientService>();
 builder.Services.AddScoped<IngredientService>();
+builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<MenuRecipeService>();
+builder.Services.AddScoped<MenuDayService>();
+builder.Services.AddScoped<WeeklyMenuService>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 // Adds authentication state
