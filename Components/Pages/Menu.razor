@@ -81,16 +81,33 @@
     protected override async Task OnInitializedAsync()
     {
         recipes = await RecipeService.GetUserRecipes();
+
+        // Temporary RecipeList for testing
+        // Todo: Remove when RecipeList is seeded
+        if (!recipes.Any())
+        {
+            recipes = new List<Recipe>
+                {
+                    new Recipe { Id = 101, Name = "Test Pancakes", PrepTime = 10, CookTime = 5, Servings = 2},
+                    new Recipe { Id = 102, Name = "Test Salad", PrepTime = 5, CookTime = 0, Servings = 1},
+                    new Recipe { Id = 103, Name = "Test Pasta", PrepTime = 12, CookTime = 15, Servings = 3}
+                };
+        }
     }
 
     private Task HandleDragStarted(int recipeId)
     {
+        // For testing
+        Console.WriteLine($"Dragging recipe id: {recipeId}");
         draggedRecipeId = recipeId;
+
         return Task.CompletedTask;
     }
 
     private Task HandleRecipeDropped((DateOnly date, MealType mealType) args)
     {
+        // For Testing
+        Console.WriteLine($"Parent received drop for {args.mealType}, draggedRecipeId={draggedRecipeId}");
         if (draggedRecipeId is null)
             return Task.CompletedTask;
 
