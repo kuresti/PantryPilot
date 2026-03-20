@@ -10,6 +10,7 @@
 @* Changes made to add functionality to mealcard *@
 <div class="meal-card"        
     @ondragover:preventDefault
+    @ondrop:preventDefault
     @ondrop="HandleDrop">
     <div class="meal-type">@MealType</div>
 
@@ -56,12 +57,15 @@
     [Parameter] public DateOnly Date { get; set; }
     [Parameter] public MealType MealType { get; set; }
     [Parameter] public int? RecipeId { get; set; }
+  
 
     [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRecipeDropped { get; set; }
     [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
+        // For Testing
+        Console.WriteLine($"MealCard {MealType} received RecipeId={RecipeId}");
         assignedRecipe = null;
         recipeFeatures = new();
 
@@ -69,6 +73,9 @@
             return;
 
         assignedRecipe = await RecipeService.GetRecipe(RecipeId.Value);
+
+        // For Testing
+        Console.WriteLine($"MealCard {MealType} loaded recipe: {assignedRecipe?.Name ?? "NULL"}");
 
         if (assignedRecipe is null)
             return;
@@ -85,6 +92,8 @@
 
     private Task HandleDrop()
     {
+        // For testing
+        Console.WriteLine($"Dropped on {MealType}");
         return OnRecipeDropped.InvokeAsync((Date, MealType));
     }
 
