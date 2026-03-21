@@ -25,6 +25,8 @@ builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<MenuRecipeService>();
 builder.Services.AddScoped<MenuDayService>();
 builder.Services.AddScoped<WeeklyMenuService>();
+builder.Services.AddScoped<GroceryListService>();
+builder.Services.AddScoped<GroceryListItemService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
