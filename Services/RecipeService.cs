@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Models;
 using PantryPilot.Data;
+using PantryPilot.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
 namespace PantryPilot.Services
 {
-    public class RecipeService
+    public class RecipeService : IRecipeService
     {
         private readonly ApplicationDbContext _context;
         private readonly AuthenticationStateProvider _authStateProvider;
