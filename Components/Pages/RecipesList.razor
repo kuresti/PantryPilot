@@ -51,7 +51,7 @@ else
 @code {
     private List<Recipe>? recipes;
 
-    @* protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         recipes = await RecipeService.GetUserRecipes();
     }
