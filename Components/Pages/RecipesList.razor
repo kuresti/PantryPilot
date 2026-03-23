@@ -1,13 +1,78 @@
 @page "/recipelist"
 @rendermode InteractiveServer // for the header navigation
+@using PantryPilot.Services;
+@inject RecipeService RecipeService
 @inject NavigationManager NavigationManager
 
 <PageTitle>RecipeList</PageTitle>
 
 <h1>Recipes</h1>
 
-<p>List all recipes</p>
+@if (recipes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!recipes.Any())
+{
+    <p><em>No recipes found</em></p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Prep Time</th>
+                <th>Cook Time</th>
+                <th>Servings</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recipe in recipes)
+            {
+                <tr>
+                    <td>@recipe.Name</td>
+                    <td>@recipe.PrepTime</td>
+                    <td>@recipe.CookTime</td>
+                    <td>@recipe.Servings</td>
+                    <td>
+                        <button @onclick="() => EditRecipe(recipe.Id)">Edit</button>
+                        <button @onclick="() => DeleteRecipe(recipe.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<button @onclick="GoToAddRecipe">Add Recipe</button>
 
 @code {
+    private List<Recipe>? recipes;
 
+    protected override async Task OnInitializedAsync()
+    {
+        recipes = await RecipeService.GetUserRecipes();
+    }
+
+    private void GoToAddRecipe()
+    {
+        NavigationManager.NavigateTo("/addrecipe");
+    }
+
+    private void EditRecipe(int id)
+    {
+        NavigationManager.NavigateTo($"/addrecipe?id={id}");
+    }
+
+    private async Task DeleteRecipe(int id)
+    {
+        var success = await RecipeService.DeleteRecipe(id);
+        if (success)
+        {
+            recipes = await RecipeService.GetUserRecipes();
+            StateHasChanged();
+        }
+    }
 }

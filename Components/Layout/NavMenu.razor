@@ -1,32 +1,168 @@
-﻿@using BlazorApp.Components.ReusableUI
-@* This is the side-bar containing the Navigation Menu *@
+﻿@namespace PantryPilot.Components.Layout
+@using Microsoft.CodeAnalysis.CSharp
+@using PantryPilot.Components.ReusableUI
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using PantryPilot.Models
+@using SQLitePCL
+@* This is the header containing the Navigation Menu *@
+
+@implements IDisposable
+@inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> UserManager
+
 
 <div class="navbar px-3">
-    @* Brand on the left *@
-    <a class="navbar-brand" href="">PantryPilot</a>
+    @* Brand Logo *@
+    <a class="navbar-brand" href="">
+        <img src="images/PantryPilotLogo.png" alt="PantryPilot Logo" height="95" />
+    </a>
 
-    @* Right aligned section for Search and Links *@
-    <div class="nav-elements ms-auto d-flex align-items-center">
+    @* Hamburger Button *@
+    <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        @* Main Navigation Links *@
+    @* The Single Collapsible Container *@
+    <div class="@NavMenuCssClass nav-elements ms-auto">
+        
+        @* Home button *@
         <nav class="d-flex align-items-center me-4">
-            <div class="nav-item">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
             </div>
-            <div class="nav-item">
-                <NavLink class="nav-link" href="menu">Menu</NavLink>
+
+            @* Menu button *@
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="menu">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Menu
+                </NavLink>
             </div>
-            <div class="nav-item">
-                <NavLink class="nav-link" href="grocerylist">Groceries</NavLink>
+
+            @* Groceries button *@
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="grocerylist">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Groceries
+                </NavLink>
             </div>
-            <div class="nav-item">
-                <NavLink class="nav-link" href="recipelist">Recipes</NavLink>
+
+            @* Recipies button *@
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="recipelist">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Recipes
+                </NavLink>
             </div>
+
+            @* Recipe Form button *@
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="addrecipe">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Recipe Form
+                </NavLink>
+            </div>
+
+            <AuthorizeView>
+                <NotAuthorized>
+                    @* Register button *@
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Account/Register">
+                            <span class="bi bi-person-plus-fill-nav-menu" aria-hidden="true"></span> Register
+                        </NavLink>
+                    </div>
+
+                    @* Login button *@
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Account/Login">
+                            Login
+                        </NavLink>
+                    </div>
+                </NotAuthorized>
+                <Authorized Context="authState">
+                    <div class="nav-item px-3">
+                        <span class="nav-link text-light">
+                            👤 @(displayName ?? authState.User.Identity?.Name)
+                        </span>
+                    </div>
+
+                    @* Account button *@
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Account/Manage/Index">
+                            Account
+                        </NavLink>
+                    </div>
+
+                    @* Logout button *@
+                    <div class="nav-item px-3">
+                       <form method="post" action="/Account/Logout" class="d-inline">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="returnUrl" value="" />
+                            <button type="submit" class="nav-link btn btn-link text-start w-100 border-0 p-0 m-0 text-light shadow-none">
+                                Logout
+                            </button>
+                       </form>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </nav>
 
-        @* Search Bar with a specific width constraint *@
+        @* Searchbar on the far right *@
         <div class="header-search">
             <SearchDropdown CustomClass="rounded-search m-0 p-0" />
         </div>
     </div>
 </div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+    private string? currentUrl;
+    private string? displayName;
+    private bool collapseNavMenu = true;    // for mobile screens to toggle the nav visibility
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu =!collapseNavMenu;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+        await LoadDisplayNameAsync();
+    }
+
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        await LoadDisplayNameAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadDisplayNameAsync()
+    {
+        if (AuthenticationStateTask is null)
+        {
+            displayName = null;
+            return;
+        }
+
+        var authState = await AuthenticationStateTask;
+        var principal = authState.User;
+
+        if (principal.Identity?.IsAuthenticated != true)
+        {
+            displayName = null;
+            return;
+        }
+
+        var user = await UserManager.GetUserAsync(principal);
+        displayName = user?.Name;
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+}

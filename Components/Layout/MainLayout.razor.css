@@ -5,9 +5,10 @@
 }
 
 .top-nav {
-    background-color: #23272b;
+    background-color: #636CA8;
     color: white;
-    padding: 0.5rem 1rem;
+    padding: 0;
+    border: none;
 }
 
 .content {

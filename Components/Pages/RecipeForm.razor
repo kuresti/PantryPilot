@@ -1,13 +1,100 @@
 @page "/addrecipe"
+@page "/addrecipe/{id:int}"
+
 @rendermode InteractiveServer // for the header navigation
+@using PantryPilot.Services
+@using PantryPilot.Models
+
+@* Added to prevent non-authenticated users
+   from viewing this page *@
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize];
+
+@inject RecipeService RecipeService
 @inject NavigationManager NavigationManager
 
 <PageTitle>AddRecipe</PageTitle>
 
-<h1>Add Recipe</h1>
+<h1>@(IsEditMode ? "Edit Recipe" : "Add Recipe")</h1>
 
 <p>Fill out a form to add a recipe to the list</p>
 
-@code {
+@if (recipe == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <!-- Recipe form goes here -->
+    <!-- Example inputs
 
+    <input @bind="recipe.Name" placeholder="Recipe name" />
+    <input @bind="recipe.Description" placeholder="Description" />
+    <input type="number" @bind="recipe.PrepTime" />
+    <input type="number" @bind="recipe.CookTime" />
+    <input type="number" @bind="recipe.Servings" /> 
+    
+    -->
+
+    <button @onclick="SaveRecipe">Save</button>
+    <button @onclick="Cancel">Cancel</button>
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    private Recipe? recipe;
+    private bool IsEditMode => Id.HasValue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditMode)
+        {
+            recipe = await RecipeService.GetRecipe(Id!.Value);
+
+            if (recipe == null)
+            {
+                NavigationManager.NavigateTo("/recipelist");
+                return;
+            }
+        }
+        else
+        {
+            // Create mode: start with a blank recipe
+            recipe = new Recipe
+            {
+                Name = "",
+                Description = "",
+                PrepTime = 0,
+                CookTime = 0,
+                Servings = 0,
+                Steps = new List<RecipeStep>(),
+                RecipeIngredients = new List<RecipeIngredient>()
+            };
+        }
+    }
+
+    private async Task SaveRecipe()
+    {
+        if (recipe == null)
+        {
+            return;
+        }
+
+        if (IsEditMode)
+        {
+            await RecipeService.UpdateRecipe(recipe);
+        }
+        else
+        {
+            await RecipeService.CreateRecipe(recipe);
+        }
+
+        NavigationManager.NavigateTo("/recipelist");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/recipelist");
+    }
 }
