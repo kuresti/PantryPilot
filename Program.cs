@@ -1,6 +1,7 @@
 ﻿using PantryPilot.Components;
 using PantryPilot.Data;
 using PantryPilot.Services;
+using PantryPilot.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Models;
 using Microsoft.AspNetCore.Identity;
@@ -25,8 +26,8 @@ builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<MenuRecipeService>();
 builder.Services.AddScoped<MenuDayService>();
 builder.Services.AddScoped<WeeklyMenuService>();
-builder.Services.AddScoped<GroceryListService>();
-builder.Services.AddScoped<GroceryListItemService>();
+builder.Services.AddScoped<IGroceryListService, GroceryListService>();
+builder.Services.AddScoped<IGroceryListItemService, GroceryListItemService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
