@@ -86,7 +86,7 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>()
+app.MapRazorComponents<PantryPilot.Components.App>()
     .AddInteractiveServerRenderMode();
 
 app.MapAdditionalIdentityEndpoints();;
