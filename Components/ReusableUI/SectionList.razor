@@ -1,0 +1,18 @@
+
+<h3>@SectionTitle</h3>
+
+@if (Ingredients != null)
+{
+    <ul>@foreach (var ingredient in Ingredients)
+        {
+            <li>@ingredient</li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public string? SectionTitle { get; set; }
+    [Parameter]
+    public IEnumerable<string?> Ingredients { get; set; }
+}
