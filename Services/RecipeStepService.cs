@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Data;
 using PantryPilot.Models;
+using PantryPilot.Services.Interfaces;
 
-public class RecipeStepService
+namespace PantryPilot.Services;
+public class RecipeStepService : IRecipeStepService
 {
     private readonly ApplicationDbContext _context;
 
@@ -30,7 +32,7 @@ public class RecipeStepService
         _context.RecipeSteps.Update(recipeStep);
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task DeleteAsync(int id)
     {
         var recipeStep = await _context.RecipeSteps.FindAsync(id);
