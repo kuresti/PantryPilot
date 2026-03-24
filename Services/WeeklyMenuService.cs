@@ -54,5 +54,68 @@ namespace PantryPilot.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<WeeklyMenu?> GetCurrentWeeklyMenuForUserAsync(int userId)
+        {
+            var weeklyMenu = await _context.WeeklyMenus
+                .Include(wm => wm.Days)
+                .FirstOrDefaultAsync(wm => wm.UserId == userId);
+
+            if (weeklyMenu != null)
+            {
+                return weeklyMenu;
+            }
+
+            weeklyMenu = new WeeklyMenu
+            {
+                UserId = userId,
+                Days = new List<MenuDay>()
+            };
+
+            _context.WeeklyMenus.Add(weeklyMenu);
+            await _context.SaveChangesAsync();
+
+            return weeklyMenu;
+        }
+
+        public async Task<bool> AssignRecipeToMealAsync(int userId, DateOnly date, MealType mealType, int recipeId)
+        {
+            var weeklyMenu = await _context.WeeklyMenus
+                .Include(wm => wm.Days)
+                .FirstOrDefaultAsync(wm => wm.UserId == userId);
+
+            if (weeklyMenu == null)
+            {
+                return false;
+            }
+
+            var menuDay = weeklyMenu.Days.FirstOrDefault(d => d.Date == date);
+
+            if (menuDay == null)
+            {
+                menuDay = new MenuDay
+                {
+                    Date = date
+                };
+
+                weeklyMenu.Days.Add(menuDay);
+            }
+
+            switch (mealType)
+            {
+                case MealType.Breakfast:
+                    menuDay.BreakfastRecipeId = recipeId;
+                    break;
+                case MealType.Lunch:
+                    menuDay.LunchRecipeId = recipeId;
+                    break;
+                case MealType.Dinner:
+                    menuDay.DinnerRecipeId = recipeId;
+                    break;
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
