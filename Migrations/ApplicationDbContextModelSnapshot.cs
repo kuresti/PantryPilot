@@ -287,6 +287,9 @@ namespace PantryPilot.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -410,8 +413,7 @@ namespace PantryPilot.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Quantity")
-                        .IsRequired()
+                    b.Property<decimal>("Quantity")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RecipeId")
