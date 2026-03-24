@@ -1,22 +1,93 @@
 @* This is a reusable component for the meal cards on the Menu Page *@
+@* This component is the drop target for the drag and drop functionality *@
 
-<div class="meal-card">
-    <div class="meal-type">@Type</div>
-    <h2 class="meal-name">@Name</h2>
-    
-    <ul class="meal-features">
-        @foreach (var feature in Features)
-        {
-            <li>@feature</li>
-        }
-    </ul>
+@using PantryPilot.Models
+@using PantryPilot.Services.Interfaces
+@using System.ComponentModel
 
-    <button class="btn-cook" @onclick="OnCookClicked">Cook</button>
+@inject IRecipeService RecipeService
+
+
+<div class="meal-card"
+    @ondragover:preventDefault
+    @ondrop:preventDefault
+    @ondrop="HandleDrop">
+    <div class="meal-type">@MealType</div>
+
+    @if (assignedRecipe is not null)
+    {
+        <h2 class="meal-name">
+            <button type="button"
+                    class="recipe-link-button"
+                    @onclick="() => OnRecipeClicked.InvokeAsync(assignedRecipe.Id)">
+                @assignedRecipe.Name    
+            </button>
+        </h2>
+
+        <ul class="meal-features">
+            @foreach (var feature in recipeFeatures)
+            {
+                <li>@feature</li>
+            }
+        </ul>
+
+        <button type="button"
+                class="btn-cook"
+                @onclick="() => OnRecipeClicked.InvokeAsync(assignedRecipe.Id)">
+            View Recipe    
+        </button>
+    }
+    else
+    {
+        <h2 class="meal-name">Drop recipe here</h2>
+        <ul class="meal-features">
+            <li>Drag from recipe list</li>
+        </ul>
+
+        <button type="button" class="btn-cook" disabled>
+            No Recipe Selected
+        </button>
+    }
+     
 </div>
 
+
 @code {
-    [Parameter] public string Type { get; set; } = "Meal";
-    [Parameter] public string Name { get; set; } = "Recipe Name";
-    [Parameter] public List<string> Features { get; set; } = new();
-    [Parameter] public EventCallback OnCookClicked { get; set; }
+    private Recipe? assignedRecipe;
+    private List<string> recipeFeatures = new();
+
+    [Parameter] public DateOnly Date { get; set; }
+    [Parameter] public MealType MealType { get; set; }
+    [Parameter] public int? RecipeId { get; set; }
+
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRecipeDropped { get; set; }
+    [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        assignedRecipe = null;
+        recipeFeatures = new();
+
+        if (!RecipeId.HasValue)
+            return;
+
+        assignedRecipe = await RecipeService.GetRecipe(RecipeId.Value);
+
+        if (assignedRecipe is null)
+            return;
+
+        if (assignedRecipe.RecipeIngredients is not null)
+        {
+            recipeFeatures = assignedRecipe.RecipeIngredients
+                .Where(ri => ri.Ingredient is not null)
+                .Take(3)
+                .Select(ri => ri.Ingredient!.Name)
+                .ToList();
+        }
+    }
+
+    private Task HandleDrop()
+    {
+        return OnRecipeDropped.InvokeAsync((Date, MealType));
+    }
 }
