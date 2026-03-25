@@ -1,45 +1,143 @@
 @page "/menu"
-@using PantryPilot.Components.ReusableUI
 @rendermode InteractiveServer
+
+@using PantryPilot.Components.ReusableUI
+@using PantryPilot.Models
+@using PantryPilot.Services.Interfaces
+
 
 @* Added to prevent non-authenticated users
    from viewing this page *@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize];
 @inject NavigationManager NavigationManager
+@inject IRecipeService RecipeService
+@inject IWeeklyMenuService WeeklyMenuService
 
 <PageTitle>Menu</PageTitle>
+<div class="planner-layout">
+    <RecipeList Recipes="recipes"
+                OnDragStarted="HandleDragStarted" />
 
 <div class="menu-container">
     <header class="menu-header">
-        <p class="tagline">Tagline</p>
+        <p class="tagline">Plan your meals</p>
         <h1 class="main-title">Menu</h1>
-        <p class="description">Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.</p>
+        <p class="description">Drag recipes into Breakfast, Lunch, and Dinner.</p>
 
         <div class="view-switcher">
-            <button class="view-btn active">Daily</button>
-            <button class="view-btn">Weekly</button>
-            <button class="view-btn">Monthly</button>
+            <button type="button" class="view-btn active">Daily</button>
+            <button type="button" class="view-btn">Weekly</button>
+            <button type="button" class="view-btn">Monthly</button>
         </div>
 
-        <p class="current-date">Date: <span>April 10, 2026</span></p>
+        <p class="current-date">
+            Date: <span>@selectedDate.ToString("MMMM d, yyyy")</span>
+        </p>
     </header>
 
     <div class="meal-grid">
-        <MealCard Type="Breakfast"
-                  Name="Blueberry Pancakes"
-                  Features="@(new List<string> { "High Protein", "Gluten Free", "15 mins" })" />
+        <MealCard Date="selectedDate"
+                  MealType="MealType.Breakfast"
+                  RecipeId="selectedMenuDay?.BreakfastRecipeId"
+                  OnRecipeDropped="HandleRecipeDropped"
+                  OnRecipeClicked="HandleRecipeClicked" />
         
-        <MealCard Type="Lunch" 
-                  Name="Chicken Caesar" 
-                  Features="@(new List<string> { "Fresh Greens", "Low Carb", "10 mins" })" />
+        <MealCard Date="selectedDate"
+                  MealType="MealType.Lunch"
+                  RecipeId="selectedMenuDay?.LunchRecipeId"
+                  OnRecipeDropped="HandleRecipeDropped"
+                  OnRecipeClicked="HandleRecipeClicked" />
         
-        <MealCard Type="Dinner" 
-                  Name="Grilled Salmon" 
-                  Features="@(new List<string> { "Omega-3", "Heart Healthy", "25 mins" })" />
+        <MealCard Date="selectedDate"
+                  MealType="MealType.Dinner"
+                  RecipeId="selectedMenuDay?.DinnerRecipeId"
+                  OnRecipeDropped="HandleRecipeDropped"
+                  OnRecipeClicked="HandleRecipeClicked" />
+    </div>
+
+    <RecipeDetailsPanel SelectedRecipe="selectedRecipe" />
     </div>
 </div>
 
 @code {
-    
+    private List<Recipe> recipes = new();
+    private Recipe? selectedRecipe;
+    private int? draggedRecipeId;
+
+    private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
+
+    private WeeklyMenu? weeklyMenu;
+    private MenuDay? selectedMenuDay;
+
+    // lifecycle method that calls services, loads data
+    // initializes state. 
+    protected override async Task OnInitializedAsync()
+    {
+        recipes = await RecipeService.GetUserRecipes();
+
+        int userId = await RecipeService.GetCurrentUserId();
+        weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
+
+        if (weeklyMenu is not null)
+        {
+            selectedMenuDay = weeklyMenu.Days.FirstOrDefault(d => d.Date == selectedDate);
+        }
+    }
+
+    private Task HandleDragStarted(int recipeId)
+    {
+        draggedRecipeId = recipeId;
+        return Task.CompletedTask;
+    }
+
+    // Control logic for drag and drop
+    // Saves the action to the database
+    // Reloads the menu
+    // Updates the UI
+    private async Task HandleRecipeDropped((DateOnly date, MealType mealType) args)
+    {
+        // Method takes date (what date?), and mealType (what meal slot?)
+        // information is sent so parent knows the user dropped the recipe
+        // on specific date and mealType
+
+        // Check to see if there is a draggedRecipeId
+        // If not nothing will happen.
+        if (draggedRecipeId is null)
+        {
+            return;
+        }
+
+        // Gets the userId because menus are assigned per user
+        int userId = await RecipeService.GetCurrentUserId();
+
+        // UI action becomes a database state
+        await WeeklyMenuService.AssignRecipeToMealAsync(
+            userId,
+            args.date,
+            args.mealType,
+            draggedRecipeId.Value);
+
+        // The menu is reloaded from the database
+        weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
+
+
+        if (weeklyMenu is not null)
+        {
+            // The selected day is updated
+            selectedMenuDay = weeklyMenu.Days.FirstOrDefault(d => d.Date == selectedDate);
+        }
+
+        // Clears the drag state.
+        draggedRecipeId = null;
+    }
+
+    // User clicks recipe in meal card
+    // method: loads recipe from the database,
+    // then sets the selectedRecipe and updates
+    // Details panel
+    private async Task HandleRecipeClicked(int recipeId)
+    {
+        selectedRecipe = await RecipeService.GetRecipe(recipeId);
+    }
 }
