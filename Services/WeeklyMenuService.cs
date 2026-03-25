@@ -1,10 +1,11 @@
 using PantryPilot.Data;
 using PantryPilot.Models;
+using PantryPilot.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace PantryPilot.Services
 {
-    public class WeeklyMenuService
+    public class WeeklyMenuService : IWeeklyMenuService
     {
         private readonly ApplicationDbContext _context;
 

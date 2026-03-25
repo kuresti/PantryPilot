@@ -1,11 +1,12 @@
 using PantryPilot.Data;
 using PantryPilot.Models;
+using PantryPilot.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.Elfie.Model.Map;
 
-namespace PantryPilot.Services
+namespace PantryPilot.Services 
 {
-    public class GroceryListItemService
+    public class GroceryListItemService : IGroceryListItemService
     {
         private readonly ApplicationDbContext _context;
 

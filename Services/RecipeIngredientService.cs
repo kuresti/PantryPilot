@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using PantryPilot.Data;
 using PantryPilot.Models;
+using PantryPilot.Services.Interfaces;
 
-public class RecipeIngredientService
+namespace PantryPilot.Services;
+
+public class RecipeIngredientService : IRecipeIngredientService
 {
     private readonly ApplicationDbContext _context;
 

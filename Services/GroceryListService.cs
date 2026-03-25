@@ -1,10 +1,11 @@
 using PantryPilot.Data;
 using PantryPilot.Models;
+using PantryPilot.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace PantryPilot.Services
 {
-    public class GroceryListService
+    public class GroceryListService : IGroceryListService
     {
         private readonly ApplicationDbContext _context;
 
