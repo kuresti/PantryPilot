@@ -20,7 +20,7 @@ public static class SeedData
         await context.Database.MigrateAsync();
 
         // Do not reseed if recipes already exist
-        if (await context.Recipes.AnyAsync())
+        if (await context.Recipes.AnyAsync(r => r.UserId == user.Id))
             return;
 
         // Ensure that the test user exists
@@ -73,7 +73,7 @@ public static class SeedData
 
         var pastaRecipe = new Recipe
         {
-            Name = "Seed Past",
+            Name = "Seed Pasta",
             PrepTime = 12,
             CookTime = 15,
             Servings = 3,
@@ -128,7 +128,7 @@ public static class SeedData
 
         user = new ApplicationUser
         {
-            UserName = "Test",
+            UserName = email,
             Email = email
         };
 
