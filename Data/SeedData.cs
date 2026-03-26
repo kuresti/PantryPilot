@@ -1,8 +1,6 @@
 // File: PantryPilot/Data/SeedData.cs
-using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PantryPilot.Models;
 
 namespace PantryPilot.Data;
@@ -76,7 +74,7 @@ public static class SeedData
             {
                 new RecipeIngredient { Ingredient = lettuce, Quantity = 1m, Unit = "cup" },
                 new RecipeIngredient { Ingredient = tomato, Quantity = 1m, Unit = "each" },
-                new RecipeIngredient { Ingredient = cheese, Quantity = 0.5m Unit = "cup" }
+                new RecipeIngredient { Ingredient = cheese, Quantity = 0.5m, Unit = "cup" }
             },
             Steps = new List<RecipeStep>
             {
@@ -128,7 +126,15 @@ public static class SeedData
             }
         };
 
-        context.Recipes.AddRange(pancakes, salad, pastaRecipe, chickenDinner);
+        var seededRecipes = new List<Recipe>
+        {
+            pancakes,
+            salad,
+            pastaRecipe,
+            chickenDinner
+        };
+
+        context.Recipes.AddRange(seededRecipes);
 
         // Save here so recipe Ids are generated before WeeklyMenu/MenuDay uses them
         await context.SaveChangesAsync();
@@ -139,18 +145,15 @@ public static class SeedData
             Name = "Weekly Favorites",
             Date = DateTime.Today,
             UserId = userId,
-            MenuRecipes = new List<MenuRecipe>
-            {
-                new MenuRecipe { RecipeId = pancakes.Id },
-                new MenuRecipe { RecipeId = salad.Id },
-                new MenuRecipe { RecipeId = pastaRecipe.Id },
-                new MenuRecipe { RecipeId = chickenDinner.Id }
-            }
+            MenuRecipes = seededRecipes
+                .Select(r => new MenuRecipe { RecipeId = r.Id} )
+                .ToList()
+          
         };
 
         context.Menus.Add(menu);
 
-        // Weekly Mnu for drag/drop
+        // Weekly Menu for drag/drop
         var today = DateOnly.FromDateTime(DateTime.Today);
 
         var weeklyMenu = new WeeklyMenu
@@ -186,7 +189,7 @@ public static class SeedData
 
         // Grocery List generated from menu
         var groceryList = GroceryListGenerator.BuildFromRecipes(
-            new List<Recipe> { pancakes, salad, pastaRecipe, chickenDinner },
+            seededRecipes,
             userId,
             $"Grocery List - {menu.Name}");
 
