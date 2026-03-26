@@ -7,5 +7,6 @@ namespace PantryPilot.Models
 
         public List<RecipeIngredient> RecipeIngredients { get; set; }
         public List<GroceryListItem> GroceryListItems { get; set; }
+        public IngredientCategory Category { get; set; }
     }
 }
