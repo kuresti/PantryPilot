@@ -65,6 +65,12 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 var app = builder.Build();
 
+// Populates database with seed data
+if (app.Environment.IsDevelopment())
+{
+    await SeedData.InitializeAsync(app.Services);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

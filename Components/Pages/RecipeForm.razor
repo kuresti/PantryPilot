@@ -2,7 +2,7 @@
 @page "/addrecipe/{id:int}"
 
 @rendermode InteractiveServer // for the header navigation
-@using PantryPilot.Services
+@using PantryPilot.Services.Interfaces
 @using PantryPilot.Models
 
 @* Added to prevent non-authenticated users
@@ -10,7 +10,7 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize];
 
-@inject RecipeService RecipeService
+@inject IRecipeService RecipeService
 @inject NavigationManager NavigationManager
 
 <PageTitle>AddRecipe</PageTitle>
