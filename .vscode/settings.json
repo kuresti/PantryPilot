@@ -1,3 +1,4 @@
 {
-    "dotnet.defaultSolution": "PantryPilot.sln"
+    "dotnet.defaultSolution": "PantryPilot.sln",
+    "C_Cpp.dimInactiveRegions": false
 }
