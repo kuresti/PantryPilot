@@ -5,6 +5,7 @@
     position: relative; /* the anchor point for the dropdown */
     padding-top: 1rem;
     width: 100%;
+    max-width: 500px;
 }
 .search-input {
     width: 90%;

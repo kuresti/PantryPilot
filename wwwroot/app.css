@@ -197,6 +197,7 @@ hr {
 
 .main-page-bg {
     background-color: #F1F3F9;
+    min-height: 100vh;  /* the bg color covers 100% of the page */
 }
 
 .hero-container {
@@ -226,7 +227,7 @@ hr {
 .hero-button:hover {
     background-color: #e64a19;
     cursor: pointer;
-    box-shadow: #1A1A1A;
+    box-shadow: 0 4px 8px #1A1A1A;
 }
 
 .content-container {
@@ -238,6 +239,7 @@ hr {
     padding: 4rem;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .card-grid {
@@ -245,7 +247,6 @@ hr {
     flex-wrap: wrap;
     gap: 1.5rem;
     justify-content: center;
-    border: #DDE1ED;
     padding: 2rem;
 }
 
