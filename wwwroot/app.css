@@ -8,10 +8,16 @@ html, body {
 }
 
 /* Montserrat for Headers to give "PantryPilot" a professional brand feel */
-h1, h2, h3, .navbar-brand {
+h1, .navbar-brand {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     color: #636CA8; /* Using your Slate Blue for headings */
+}
+
+h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #333; /* Using your Slate Blue for headings */
 }
 
 /* Secondary Brand Color: Slate Blue for a professional feel */
@@ -188,3 +194,82 @@ hr {
     transition: background 0.2s;
 }
 .btn-cook:hover { background: #222; }
+
+.main-page-bg {
+    background-color: #F1F3F9;
+    min-height: 100vh;  /* the bg color covers 100% of the page */
+}
+
+.hero-container {
+    background-color: #2D3250;
+    padding: 4rem 0;
+}
+
+.hero-container h1 {
+    color: white;
+    font-weight: 700;
+}
+
+.hero-button {
+    color: #fff;
+    background-color: #FF5722;
+    border-color: #e64a19;
+    font-family: 'Montserrat', sans-serif; /* Montserrat makes buttons look more modern */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 40px;
+    align-self: center;
+}
+
+.hero-button:hover {
+    background-color: #e64a19;
+    cursor: pointer;
+    box-shadow: 0 4px 8px #1A1A1A;
+}
+
+.content-container {
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+    margin: 0 auto;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.feature-card {
+    background: #FFFFFF;
+    border: 1px solid #DDE1ED;
+    border-radius: 8px;
+    flex: 1 1 250px;
+    flex-basis: 250px;
+    flex-grow: 1;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.feature-card:hover {
+    border: 1px solid #4e558a;
+}
+
+.primary-text {
+    color: #1A1A1A;
+}
+
+.subtle-border {
+    border: #DDE1ED;
+}

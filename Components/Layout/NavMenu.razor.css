@@ -27,9 +27,10 @@
 }
 
 .nav-item {
-    font-size: 1.4rem;
+    font-size: 1.1rem; /* NOTE: Most modern navigation menus use a font size between 1rem and 1.1rem */
     font-family: 'Libre Franklin', sans-serif;
     list-style: none; /* Remove bullet points */
+    letter-spacing: 0.5px; /* Spacing between the individual letters in a word */
 }
 
 .nav-item ::deep .nav-link {

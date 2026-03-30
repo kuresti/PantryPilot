@@ -1,14 +1,16 @@
 
-<h3>@SectionTitle</h3>
+<div class="feature-card">
+    <h3>@SectionTitle</h3>
 
-@if (Ingredients != null)
-{
-    <ul>@foreach (var ingredient in Ingredients)
-        {
-            <li>@ingredient</li>
-        }
-    </ul>
-}
+    @if (Ingredients != null)
+    {
+        <ul>@foreach (var ingredient in Ingredients)
+            {
+                <li>@ingredient</li>
+            }
+        </ul>
+    }
+</div>
 
 @code {
     [Parameter]
