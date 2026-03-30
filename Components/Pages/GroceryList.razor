@@ -9,11 +9,20 @@
 
 <PageTitle>GroceryList</PageTitle>
 
-<h1>Grocery List &#128722</h1>
+<div class="main-page-bg">
+   <div class="hero-container">
+      <div class="content-container">
+         <h1>Grocery List &#128722</h1>
+      </div>
+   </div>
 
-<SearchDropdown CustomClass="rounded-search m-0 p-0" />
-
-<SectionList></SectionList>
+   <div class="content-container">
+      <SearchDropdown CustomClass="rounded-search m-0 p-0" />
+      <div class="card-grid">
+         <SectionList></SectionList>
+      </div>
+   </div>
+</div>
 
 @code {
     

@@ -4,29 +4,35 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1 style="width: 50%; margin: 0 auto; text-align: left;">
-    All of your favorite recipes in one place
-    </h1>
+<div class="main-page-bg">          @* covers the whole background *@
+    <div class="hero-container">    @* the header section *@
+        <h1 class="content-container">
+            All of your favorite recipes in one place
+            <button class="hero-button">Get Started</button>
+        </h1>
+    </div>
 
-<div style="width: 50%; margin: 0 auto; text-align: left;">
-    <h3>Welcome to PantryPilot</h3>
+    @* separated the welcome message and card grid *@
+    <div class="content-container">
+        <h3>Welcome to PantryPilot</h3>
 
-    <p>We aim to help you organize some of the chaos in your life 
-        by providing this easy access meal prep guide. Because 
-        your time matters.
-    </p>
-</div>
+        <p>We aim to help you organize some of the chaos in your life 
+            by providing this easy access meal prep guide. Because 
+            your time matters.
+        </p>
+    </div>
 
-<div style="width: 50%; margin: 0 auto; text-align: left;">
-    <p>Enjoy features like</p>
-    <ul>
-        <li>Saving recipes in one location</li>
-        <li>Adding your own recipes</li>
-        <li>Meal suggestions</li>
-        <li>Meal planning</li>
-        <li>Shopping lists for individual recipes</li>
-        <li>And more!</li>
-    </ul>
+    <div class="content-container">
+        <p>Enjoy features like</p>
+        <div class="card-grid">
+            <div class="feature-card">Save recipes in one location</div>
+            <div class="feature-card">Add your own recipes</div>
+            <div class="feature-card">Meal suggestions</div>
+            <div class="feature-card">Plan meals</div>
+            <div class="feature-card">Recipe shopping lists</div>
+            <div class="feature-card">And more!</div> 
+        </div>
+    </div>
 </div>
 
 @code{
