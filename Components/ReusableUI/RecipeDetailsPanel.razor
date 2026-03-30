@@ -1,0 +1,36 @@
+@* Component for clicked recipe details *@
+@using PantryPilot.Models
+
+<div class="recipe-details">
+    @if (SelectedRecipe is not null)
+    {
+        <h4>@SelectedRecipe.Name</h4>
+        <p>@SelectedRecipe.PrepTime</p>
+        <p>@SelectedRecipe.CookTime</p>
+        <p>@SelectedRecipe.Servings</p>
+
+        <h5>Ingredients</h5>
+        <ul>
+            @foreach (var recipeIngredient in SelectedRecipe.RecipeIngredients)
+            {
+                <li>@recipeIngredient.Ingredient?.Name - @recipeIngredient.Quantity @recipeIngredient.Unit</li>
+            }
+        </ul>
+
+        <h5>Instructions</h5>
+        <ol>
+            @foreach (var step in SelectedRecipe.Steps.OrderBy(s => s.StepNumber))
+            {
+                <li>@step.Instruction</li>
+            }
+        </ol>
+    }
+    else
+    {
+        <p>Select a recipe from a meal card to view details.</p>
+    }
+</div>
+
+@code {
+    [Parameter] public Recipe? SelectedRecipe { get; set; }
+}
