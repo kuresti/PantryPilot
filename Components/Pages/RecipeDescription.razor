@@ -1,0 +1,124 @@
+@page "/recipe/{id:int}"
+@rendermode InteractiveServer
+@using PantryPilot.Services.Interfaces
+@using PantryPilot.Models
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@inject IRecipeService RecipeService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@(recipe?.Name ?? "Recipe")</PageTitle>
+
+<div class="recipe-detail-page">
+    @if (loading)
+    {
+        <p class="loading-msg"><em>Loading recipe...</em></p>
+    }
+    else if (recipe == null)
+    {
+        <div class="not-found">
+            <p>Recipe not found.</p>
+            <button class="btn-back" @onclick="GoBack">← Back to Recipes</button>
+        </div>
+    }
+    else
+    {
+        <div class="detail-container">
+
+            @* ── Back + Edit header ── *@
+            <div class="detail-nav">
+                <button class="btn-back" @onclick="GoBack">← Back</button>
+                <button class="btn-edit" @onclick="EditRecipe">Edit Recipe</button>
+            </div>
+
+            @* ── Title block ── *@
+            <h1 class="detail-title">@recipe.Name</h1>
+
+            @if (!string.IsNullOrWhiteSpace(recipe.Description))
+            {
+                <p class="detail-description">@recipe.Description</p>
+            }
+
+            @* ── Meta row ── *@
+            <div class="detail-meta">
+                <div class="meta-card">
+                    <span class="meta-icon">⏱</span>
+                    <div>
+                        <div class="meta-value">@recipe.PrepTime min</div>
+                        <div class="meta-label">Prep Time</div>
+                    </div>
+                </div>
+                <div class="meta-card">
+                    <span class="meta-icon">🍳</span>
+                    <div>
+                        <div class="meta-value">@recipe.CookTime min</div>
+                        <div class="meta-label">Cook Time</div>
+                    </div>
+                </div>
+                <div class="meta-card">
+                    <span class="meta-icon">🍽</span>
+                    <div>
+                        <div class="meta-value">@recipe.Servings</div>
+                        <div class="meta-label">Serving@(recipe.Servings == 1 ? "" : "s")</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-columns">
+
+                @* ── Ingredients ── *@
+                @if (recipe.RecipeIngredients != null && recipe.RecipeIngredients.Any())
+                {
+                    <div class="detail-section">
+                        <h2 class="section-heading">Ingredients</h2>
+                        <ul class="ingredients-list">
+                            @foreach (var ri in recipe.RecipeIngredients)
+                            {
+                                <li>
+                                    <span class="ing-qty">@ri.Quantity @ri.Unit</span>
+                                    <span class="ing-name">@(ri.Ingredient?.Name ?? "—")</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                @* ── Steps ── *@
+                @if (recipe.Steps != null && recipe.Steps.Any())
+                {
+                    <div class="detail-section">
+                        <h2 class="section-heading">Instructions</h2>
+                        <ol class="steps-list">
+                            @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                            {
+                                <li class="step-item">
+                                    <span class="step-instruction">@step.Instruction</span>
+                                </li>
+                            }
+                        </ol>
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Recipe? recipe;
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipe = await RecipeService.GetRecipe(Id);
+        loading = false;
+    }
+
+    private void GoBack() => NavigationManager.NavigateTo("/recipelist");
+    private void EditRecipe() => NavigationManager.NavigateTo($"/addrecipe/{Id}");
+}
