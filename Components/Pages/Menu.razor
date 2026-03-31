@@ -76,68 +76,14 @@ else if (currentView == MenuViewMode.Weekly)
 }
 else if (currentView == MenuViewMode.Monthly)
 {
-    <div class="monthly-view">
-        <div class="month-header">
-            <button type="button" @onclick="PreviousMonth">Previous</button>
-            <h3>@currentMonth.ToString("MMMM yyyy")</h3>
-            <button type="button" @onclick="NextMonth">Next</button>
-        </div>
-    </div>
-
-    <div class="monthly-grid">
-     @foreach (var date in GetDaysInMonth(currentMonth))
-     {
-        var dayMenu = GetMenuDay(date);
-
-        <div class="month-cell @(date == selectedDate ? "selected-day" : "")">
-            <div class="month-cell-header">
-                <button type="button" class="day-number-button" @onclick="() => SelectDate(date)">
-                    @date.Day
-                </button>
-            </div>
-
-            <div class="month-cell-body">
-                <div class="meal-summary">
-                    <strong>B:</strong>
-                    @if (dayMenu?.BreakfastRecipeId is int breakfastId)
-                    {
-                        <button type="button"
-                                class="recipe-link-button"
-                                @onclick="() => HandleRecipeClicked(breakfastId)">
-                            @GetRecipeName(breakfastId)
-                        </button>
-                    }
-            </div>
-
-            <div class="meal-summary">
-                <strong>L:</strong>
-                @if (dayMenu?.LunchRecipeId is int lunchId)
-                {
-                    <button type="button"
-                            class="recipe-link-button"
-                            @onclick="() => HandleRecipeClicked(lunchId)">
-                        @GetRecipeName(lunchId)
-                    </button>
-                }
-            </div>
-
-            <div class="meal-summary">
-                <strong>D:</strong>
-                @if (dayMenu?.DinnerRecipeId is int dinnerId)
-                {
-                    <button type="button"
-                            class="recipe-link-button"
-                            @onclick="() => HandleRecipeClicked(dinnerId)">
-                        @GetRecipeName(dinnerId)   
-                    </button>
-                }
-            </div>
-
-         </div>
-        </div>
-     }
-        
-    </div>
+    <MonthlyCalendarGrid CurrentMonth="currentMonth"
+                         SelectedDate="selectedDate"
+                         MenuDays="weeklyMenu?.Days ?? new List<MenuDay>()"
+                         Recipes="recipes"
+                         OnDateSelected="SelectDate"
+                         OnRecipeClicked="HandleRecipeClicked"
+                         OnPreviousMonth="PreviousMonth"
+                         OnNextMonth="NextMonth" />
 }
         <RecipeDetailsPanel SelectedRecipe="selectedRecipe" />
     </div>
