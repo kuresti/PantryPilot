@@ -164,16 +164,16 @@ public static class SeedData
                 new MenuDay
                 {
                     Date = today,
-                    BreakfastRecipeId = pancakes.Id,
-                    LunchRecipeId = salad.Id,
-                    DinnerRecipeId = pastaRecipe.Id
+                    BreakfastRecipeId = null,
+                    LunchRecipeId = null,
+                    DinnerRecipeId = null
                 },
                 new MenuDay
                 {
                     Date = today.AddDays(1),
-                    BreakfastRecipeId = pancakes.Id,
-                    LunchRecipeId = salad.Id,
-                    DinnerRecipeId = chickenDinner.Id
+                    BreakfastRecipeId = null,
+                    LunchRecipeId = null,
+                    DinnerRecipeId = null
                 },
                 new MenuDay
                 {
