@@ -1,0 +1,17 @@
+/* CSS for the DayMenuPanel*/
+
+.day-menu-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.day-title {
+    margin-bottom: 0.5rem;
+}
+
+.day-meals {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
