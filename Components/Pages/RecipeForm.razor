@@ -2,6 +2,7 @@
 @page "/addrecipe/{id:int}"
 
 @rendermode InteractiveServer // for the header navigation
+@using PantryPilot.Services
 @using PantryPilot.Services.Interfaces
 @using PantryPilot.Models
 
@@ -11,79 +12,288 @@
 @attribute [Authorize];
 
 @inject IRecipeService RecipeService
+@inject IRecipeIngredientService RecipeIngredientService
+@inject IRecipeStepService RecipeStepService
+@inject IIngredientService IngredientService
 @inject NavigationManager NavigationManager
 
-<PageTitle>AddRecipe</PageTitle>
+<PageTitle>@(IsEditMode ? "Edit Recipe" : "Add Recipe")</PageTitle>
 
-<h1>@(IsEditMode ? "Edit Recipe" : "Add Recipe")</h1>
+<div class="recipe-form-page">
+    <div class="recipe-form-container">
+        <h1 class="form-title">Recipe Form</h1>
+        <p class="form-subtitle">@(IsEditMode ? "Update your recipe below." : "Add a Recipe!")</p>
 
-<p>Fill out a form to add a recipe to the list</p>
+        @if (recipe == null || allIngredients == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="form-error">@errorMessage</div>
+            }
 
-@if (recipe == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <!-- Recipe form goes here -->
-    <!-- Example inputs
+            @* ── Basic Info ── *@
+            <div class="form-section">
+                <label class="form-label" for="recipeName">Name</label>
+                <input id="recipeName"
+                       class="form-input"
+                       placeholder="Recipe name"
+                       @bind="recipe.Name" />
+            </div>
 
-    <input @bind="recipe.Name" placeholder="Recipe name" />
-    <input @bind="recipe.Description" placeholder="Description" />
-    <input type="number" @bind="recipe.PrepTime" />
-    <input type="number" @bind="recipe.CookTime" />
-    <input type="number" @bind="recipe.Servings" /> 
-    
-    -->
+            <div class="form-section">
+                <label class="form-label" for="recipeDesc">Description</label>
+                <textarea id="recipeDesc"
+                          class="form-textarea"
+                          placeholder="Short description of the recipe"
+                          @bind="recipe.Description"></textarea>
+            </div>
 
-    <button @onclick="SaveRecipe">Save</button>
-    <button @onclick="Cancel">Cancel</button>
-}
+            <div class="form-row">
+                <div class="form-section">
+                    <label class="form-label" for="prepTime">Prep Time (min)</label>
+                    <input id="prepTime"
+                           class="form-input"
+                           type="number"
+                           min="0"
+                           @bind="recipe.PrepTime" />
+                </div>
+                <div class="form-section">
+                    <label class="form-label" for="cookTime">Cook Time (min)</label>
+                    <input id="cookTime"
+                           class="form-input"
+                           type="number"
+                           min="0"
+                           @bind="recipe.CookTime" />
+                </div>
+                <div class="form-section">
+                    <label class="form-label" for="servings">Servings</label>
+                    <input id="servings"
+                           class="form-input"
+                           type="number"
+                           min="1"
+                           @bind="recipe.Servings" />
+                </div>
+            </div>
+
+            @* ── Ingredients ── *@
+            <div class="form-section">
+                <label class="form-label">Ingredients</label>
+
+                @foreach (var (row, index) in ingredientRows.Select((r, i) => (r, i)))
+                {
+                    <div class="ingredient-row">
+                        <select class="form-input ingredient-select" @bind="row.IngredientId">
+                            <option value="0">-- Select ingredient --</option>
+                            @foreach (var ing in allIngredients)
+                            {
+                                <option value="@ing.Id">@ing.Name</option>
+                            }
+                        </select>
+
+                        <input class="form-input ingredient-qty"
+                               type="number"
+                               min="0"
+                               step="0.25"
+                               placeholder="Qty"
+                               @bind="row.Quantity" />
+
+                        <input class="form-input ingredient-unit"
+                               placeholder="Unit"
+                               @bind="row.Unit" />
+
+                        <button type="button"
+                                class="btn-remove"
+                                @onclick="() => RemoveIngredientRow(index)">✕</button>
+                    </div>
+                }
+
+                <button type="button" class="btn-add-row" @onclick="AddIngredientRow">
+                    + Add Ingredient
+                </button>
+            </div>
+
+            @* ── Steps ── *@
+            <div class="form-section">
+                <label class="form-label">Instructions</label>
+
+                @foreach (var (step, index) in stepRows.Select((s, i) => (s, i)))
+                {
+                    <div class="step-row">
+                        <span class="step-number">@(index + 1).</span>
+                        <textarea class="form-textarea step-textarea"
+                                  placeholder="Describe this step..."
+                                  @bind="step.Instruction"></textarea>
+                        <button type="button"
+                                class="btn-remove"
+                                @onclick="() => RemoveStepRow(index)">✕</button>
+                    </div>
+                }
+
+                <button type="button" class="btn-add-row" @onclick="AddStepRow">
+                    + Add Step
+                </button>
+            </div>
+
+            @* ── Actions ── *@
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" @onclick="Cancel">Cancel</button>
+                <button type="button" class="btn-submit" @onclick="SaveRecipe">
+                    @(IsEditMode ? "Update Recipe" : "Submit")
+                </button>
+            </div>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]
     public int? Id { get; set; }
+
     private Recipe? recipe;
+    private List<Ingredient>? allIngredients;
+
+    // Local editable rows — decoupled from the model so we can add/remove freely
+    private List<IngredientRow> ingredientRows = new();
+    private List<StepRow> stepRows = new();
+
+    private string? errorMessage;
     private bool IsEditMode => Id.HasValue;
 
+    // ── Lightweight local row types ──────────────────────────────────────────
+    private class IngredientRow
+    {
+        public int IngredientId { get; set; }
+        public decimal Quantity { get; set; }
+        public string Unit { get; set; } = "";
+    }
+
+    private class StepRow
+    {
+        public string Instruction { get; set; } = "";
+    }
+
+    // ── Lifecycle ────────────────────────────────────────────────────────────
     protected override async Task OnInitializedAsync()
     {
+        allIngredients = await IngredientService.GetAllAsync();
+
         if (IsEditMode)
         {
             recipe = await RecipeService.GetRecipe(Id!.Value);
-
             if (recipe == null)
             {
                 NavigationManager.NavigateTo("/recipelist");
                 return;
             }
+
+            // Populate rows from existing data
+            if (recipe.RecipeIngredients != null)
+            {
+                ingredientRows = recipe.RecipeIngredients
+                    .Select(ri => new IngredientRow
+                    {
+                        IngredientId = ri.IngredientId,
+                        Quantity = ri.Quantity,
+                        Unit = ri.Unit ?? ""
+                    })
+                    .ToList();
+            }
+
+            if (recipe.Steps != null)
+            {
+                stepRows = recipe.Steps
+                    .OrderBy(s => s.StepNumber)
+                    .Select(s => new StepRow { Instruction = s.Instruction ?? "" })
+                    .ToList();
+            }
         }
         else
         {
-            // Create mode: start with a blank recipe
             recipe = new Recipe
             {
                 Name = "",
                 Description = "",
                 PrepTime = 0,
                 CookTime = 0,
-                Servings = 0,
+                Servings = 1,
                 Steps = new List<RecipeStep>(),
                 RecipeIngredients = new List<RecipeIngredient>()
             };
+
+            // Start with one empty row each
+            ingredientRows.Add(new IngredientRow());
+            stepRows.Add(new StepRow());
         }
     }
 
+    // ── Row management ───────────────────────────────────────────────────────
+    private void AddIngredientRow() => ingredientRows.Add(new IngredientRow());
+    private void RemoveIngredientRow(int index) => ingredientRows.RemoveAt(index);
+
+    private void AddStepRow() => stepRows.Add(new StepRow());
+    private void RemoveStepRow(int index) => stepRows.RemoveAt(index);
+
+    // ── Save ─────────────────────────────────────────────────────────────────
     private async Task SaveRecipe()
     {
-        if (recipe == null)
+        errorMessage = null;
+
+        if (recipe == null) return;
+
+        if (string.IsNullOrWhiteSpace(recipe.Name))
         {
+            errorMessage = "Recipe name is required.";
             return;
         }
 
+        // Build RecipeIngredients from rows
+        recipe.RecipeIngredients = ingredientRows
+            .Where(r => r.IngredientId > 0)
+            .Select(r => new RecipeIngredient
+            {
+                IngredientId = r.IngredientId,
+                Quantity = r.Quantity,
+                Unit = r.Unit
+            })
+            .ToList();
+
+        // Build Steps from rows
+        recipe.Steps = stepRows
+            .Where(s => !string.IsNullOrWhiteSpace(s.Instruction))
+            .Select((s, i) => new RecipeStep
+            {
+                StepNumber = i + 1,
+                Instruction = s.Instruction
+            })
+            .ToList();
+
         if (IsEditMode)
         {
+            // Delete old ingredients and steps, then recreate
+            var existingIngredients = await RecipeIngredientService.GetByRecipeIdAsync(recipe.Id);
+            foreach (var ri in existingIngredients)
+                await RecipeIngredientService.DeleteAsync(ri.Id);
+
+            var existingSteps = await RecipeStepService.GetByRecipeIdAsync(recipe.Id);
+            foreach (var step in existingSteps)
+                await RecipeStepService.DeleteAsync(step.Id);
+
+            // Attach RecipeId before saving
+            foreach (var ri in recipe.RecipeIngredients)
+                ri.RecipeId = recipe.Id;
+            foreach (var s in recipe.Steps)
+                s.RecipeId = recipe.Id;
+
             await RecipeService.UpdateRecipe(recipe);
+
+            foreach (var ri in recipe.RecipeIngredients)
+                await RecipeIngredientService.AddAsync(ri);
+            foreach (var s in recipe.Steps)
+                await RecipeStepService.AddAsync(s);
         }
         else
         {
@@ -93,8 +303,5 @@ else
         NavigationManager.NavigateTo("/recipelist");
     }
 
-    private void Cancel()
-    {
-        NavigationManager.NavigateTo("/recipelist");
-    }
+    private void Cancel() => NavigationManager.NavigateTo("/recipelist");
 }

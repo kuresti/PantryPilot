@@ -1,0 +1,255 @@
+/* ── Page wrapper ─────────────────────────────────────────────────────────── */
+.recipe-form-page {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+    background-color: #f7f7f9;
+    min-height: 100vh;
+}
+
+.recipe-form-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 680px;
+}
+
+/* ── Headings ─────────────────────────────────────────────────────────────── */
+.form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #1a1a2e;
+    margin-bottom: 0.25rem;
+}
+
+.form-subtitle {
+    text-align: center;
+    font-weight: 600;
+    font-style: italic;
+    color: #636CA8;
+    margin-bottom: 2rem;
+}
+
+/* ── Error banner ─────────────────────────────────────────────────────────── */
+.form-error {
+    background: #fdecea;
+    color: #c0392b;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+}
+
+/* ── Sections & labels ────────────────────────────────────────────────────── */
+.form-section {
+    margin-bottom: 1.5rem;
+    flex: 1;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+}
+
+/* Three-column row for prep/cook/servings */
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0;
+}
+
+.form-row .form-section {
+    flex: 1;
+}
+
+/* ── Inputs ───────────────────────────────────────────────────────────────── */
+.form-input {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #222;
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #636CA8;
+    box-shadow: 0 0 0 3px rgba(99, 108, 168, 0.15);
+    background: white;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #222;
+    background: #fafafa;
+    resize: vertical;
+    min-height: 90px;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #636CA8;
+    box-shadow: 0 0 0 3px rgba(99, 108, 168, 0.15);
+    background: white;
+}
+
+/* ── Ingredient rows ──────────────────────────────────────────────────────── */
+.ingredient-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.6rem;
+}
+
+.ingredient-select {
+    flex: 2;
+}
+
+.ingredient-qty {
+    flex: 0 0 80px;
+    min-width: 0;
+}
+
+.ingredient-unit {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ── Step rows ────────────────────────────────────────────────────────────── */
+.step-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    margin-bottom: 0.6rem;
+}
+
+.step-number {
+    font-weight: 700;
+    color: #636CA8;
+    padding-top: 0.7rem;
+    min-width: 1.5rem;
+    text-align: right;
+}
+
+.step-textarea {
+    flex: 1;
+    min-height: 60px;
+}
+
+/* ── Add row button ───────────────────────────────────────────────────────── */
+.btn-add-row {
+    background: none;
+    border: 1.5px dashed #636CA8;
+    color: #636CA8;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.3rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-add-row:hover {
+    background: #636CA8;
+    color: white;
+}
+
+/* ── Remove button ────────────────────────────────────────────────────────── */
+.btn-remove {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-remove:hover {
+    color: #e74c3c;
+}
+
+/* ── Action buttons ───────────────────────────────────────────────────────── */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.btn-submit {
+    background-color: #636CA8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-submit:hover {
+    background-color: #4e5690;
+    transform: translateY(-1px);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.btn-cancel {
+    background: none;
+    color: #888;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-cancel:hover {
+    border-color: #aaa;
+    color: #555;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .ingredient-row {
+        flex-wrap: wrap;
+    }
+
+    .ingredient-qty,
+    .ingredient-unit {
+        flex: 1 1 auto;
+    }
+}
