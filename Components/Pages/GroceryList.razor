@@ -1,11 +1,18 @@
 @page "/grocerylist"
 @rendermode InteractiveServer // for the header navigation
 
+@using Microsoft.IdentityModel.Tokens
+@using PantryPilot.Models
+@using PantryPilot.Services.Interfaces
+
 @* Added to prevent non-authenticated users
    from viewing this page *@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize];
 @inject NavigationManager NavigationManager
+@inject IWeeklyMenuService WeeklyMenuService
+@inject IRecipeService RecipeService
+@inject IIngredientService IngredientService
 
 <PageTitle>GroceryList</PageTitle>
 
@@ -19,11 +26,165 @@
    <div class="content-container">
       <SearchDropdown CustomClass="rounded-search m-0 p-0" />
       <div class="card-grid">
-         <SectionList></SectionList>
+         @if (groupedIngredients.Count == 0)
+         {
+            <p>No grocery items found.</p>
+         }
+         else
+         {
+            @foreach (var group in groupedIngredients)
+            {
+               <SectionList
+                  SectionTitle="@group.Key.ToString()"
+                  Ingredients="group.Value"
+               />
+            }
+         }
       </div>
    </div>
 </div>
 
 @code {
-    
+   // Category -> List of display string like "2 cups of flour"
+   private Dictionary<IngredientCategory, List<string>> groupedIngredients = new();
+
+   protected override async Task OnInitializedAsync()
+   {
+      // Get current user id
+      int userId = await RecipeService.GetCurrentUserId();
+
+      // Load the user's WeeklyMenu
+      var weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
+      if (weeklyMenu is null || weeklyMenu.Days is null || weeklyMenu.Days.Count == 0)
+      {
+         return;
+      }
+
+      // Collect all recipe ids for the entire week (Breakfast, Lunch, Dinner)
+      var recipeIds = weeklyMenu.Days
+         .SelectMany(d => new int?[] { d.BreakfastRecipeId, d.LunchRecipeId, d.DinnerRecipeId })
+         .Where(id => id.HasValue)
+         .Select(id => id!.Value)
+         .Distinct()
+         .ToList();
+
+      if (recipeIds.Count == 0)
+      {
+         return;
+      }
+
+      // Collect all items from the recipes, then aggregate by ingredient name and unit
+      var items = new List<(IngredientCategory Category, string Name, decimal Quantity, string Unit)>();
+
+      foreach (var recipeId in recipeIds)
+      {
+         var recipe = await RecipeService.GetRecipe(recipeId);
+         if (recipe == null || recipe.RecipeIngredients == null)
+         {
+            continue;
+         }
+
+         foreach (var ri in recipe.RecipeIngredients)
+         {
+            // Make sure we have the ingredient loaded
+            var ingredient = ri.Ingredient;
+            if (ingredient == null)
+            {
+               ingredient = await IngredientService.GetByIdAsync(ri.IngredientId);
+               if (ingredient == null)
+               {
+                  continue; // Skip if we can't load the ingredient
+               }
+            }
+
+            // Add raw ingredient data to the list for later aggregation
+            items.Add((
+               ingredient.Category,
+               ingredient.Name,
+               ri.Quantity,
+               NormalizeUnit(ri.Unit ?? "")
+            ));
+         }
+      }
+
+      // Aggregate quantities after the loop
+         var aggregated = items
+            .GroupBy(i => new { i.Category, i.Name, i.Unit })
+            .Select(g =>
+            {
+               var totalQty = g.Sum(x => x.Quantity);
+               var unit = PluralizeUnit(g.Key.Unit, totalQty);
+               var qtyText = FormatQuantity(totalQty);
+
+               return new
+               {              
+                  g.Key.Category,
+                  Line = $"{qtyText} {(string.IsNullOrWhiteSpace(unit) ? "" : $" {unit}")} {g.Key.Name}"
+               };
+            })
+            .ToList();
+
+      // Group by IngredientCategory for SectionList
+      groupedIngredients = aggregated
+         .GroupBy(x => x.Category)
+         .ToDictionary(
+            g => g.Key,
+            g => g.Select(x => x.Line).ToList());
+   }
+
+   // Normalize unit strings for better aggregation (e.g., "cup" vs "cups")
+   private string NormalizeUnit(string unit)
+   {
+      if (string.IsNullOrWhiteSpace(unit))
+      {
+         return "";
+      }
+
+      unit = unit.Trim().ToLower();
+
+      return unit switch
+      {
+         "cup" or "cups" => "cup",
+         "tablespoon" or "tablespoons" or "tbsp" => "tbsp",
+         "teaspoon" or "teaspoons" or "tsp" => "tsp",
+         "gram" or "grams" => "gram",
+         "kilogram" or "kilograms" => "kilogram",
+         "ounce" or "ounces" => "ounce",
+         "pound" or "pounds" => "pound",
+         "each" or "unit" or "units" => "each",
+         _ => unit // Return as-is if we don't have a normalization rule
+      };
+   }
+
+   // Pluralize unit based on quantity (e.g., "1 cup" vs "2 cups")
+   private string PluralizeUnit(string Unit, decimal Quantity)
+   {
+      if (string.IsNullOrWhiteSpace(Unit))
+      {
+         return "";
+      }
+
+      // Units that should NOT pluralize
+      if (Unit == "each")
+      {
+         return Unit;
+      }
+
+      // If quantity is 1, return singular form
+      if (Quantity == 1)
+      {
+         return Unit;
+      }
+
+      // Otherwise pluralize by adding 's'
+      return Unit + "s";
+   }
+
+   // Format quantities
+   private string FormatQuantity(decimal qty)
+   {
+      return qty % 1 == 0 
+      ? ((int)qty).ToString() // whole number, no decimals
+      : qty.ToString(); // fraction, keep decimals 
+   }
 }
