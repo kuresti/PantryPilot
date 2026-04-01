@@ -2,7 +2,6 @@
 
 @using PantryPilot.Models
 
-
 @if (SelectedRecipe is null)
 {
     <div class="recipe-details-empty">
@@ -25,12 +24,12 @@ else
         <div class="details-section">
             <h3>Ingredients</h3>
 
-            @if (SelectedRecipe.RecipeIngredients is not null && SelectedRecipe.RecipeIngredients.Any())
+            @if (SelectedRecipe.RecipeIngredients is not null && SelectedRecipe.RecipeIngredients.Any() )
             {
                 <ul class="details-list">
                     @foreach (var item in SelectedRecipe.RecipeIngredients)
                     {
-                        <li>@item.Quantity @item.Unit @item.Ingredient.Name</li>
+                        <li>@item.Quantity @item.Unit @item.Ingredient?.Name</li>
                     }
                 </ul>
             }
