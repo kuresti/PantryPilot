@@ -1,0 +1,54 @@
+/* Styles Recipe details on menu page */
+
+.recipe-details-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.details-title {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.details-description {
+    color: #555;
+    margin: 0;
+}
+
+.details-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: #666;
+    font-weight: 600;
+}
+
+.details-section {
+    background: #F9FAFC;
+    border: 1px solid #DDE1ED;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.details-list {
+    margin: 0.75rem 0 0 1rem;
+}
+
+.details-header {
+    margin-bottom: 1rem;
+}
+
+.back-btn {
+    border: none;
+    background: #636CA8;
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight:600;
+}
+
+.back-btn:hover {
+    background: #4e558a;
+}
