@@ -1,35 +1,64 @@
 @* Component for clicked recipe details *@
+
 @using PantryPilot.Models
 
-<div class="recipe-details">
-    @if (SelectedRecipe is not null)
-    {
-        <h4>@SelectedRecipe.Name</h4>
-        <p>@SelectedRecipe.PrepTime</p>
-        <p>@SelectedRecipe.CookTime</p>
-        <p>@SelectedRecipe.Servings</p>
 
-        <h5>Ingredients</h5>
-        <ul>
-            @foreach (var recipeIngredient in SelectedRecipe.RecipeIngredients)
-            {
-                <li>@recipeIngredient.Ingredient?.Name - @recipeIngredient.Quantity @recipeIngredient.Unit</li>
-            }
-        </ul>
+@if (SelectedRecipe is null)
+{
+    <div class="recipe-details-empty">
+        <h3>Select a recipe</h3>
+        <p>Choose a recipe from the recipe list or a meal card to view its details.</p>
+    </div>
+}
+else
+{
+    <div class="recipe-details-card">
+        <h2 class="details-title">@SelectedRecipe.Name</h2>
+        <p class="details-description">@SelectedRecipe.Description</p>
 
-        <h5>Instructions</h5>
-        <ol>
-            @foreach (var step in SelectedRecipe.Steps.OrderBy(s => s.StepNumber))
+        <div class="details-meta">
+            <span>Prep: @SelectedRecipe.PrepTime min</span>
+            <span>Cook: @SelectedRecipe.CookTime min</span>
+            <span>Servings: @SelectedRecipe.Servings</span>
+        </div>
+
+        <div class="details-section">
+            <h3>Ingredients</h3>
+
+            @if (SelectedRecipe.RecipeIngredients is not null && SelectedRecipe.RecipeIngredients.Any())
             {
-                <li>@step.Instruction</li>
+                <ul class="details-list">
+                    @foreach (var item in SelectedRecipe.RecipeIngredients)
+                    {
+                        <li>@item.Quantity @item.Unit @item.Ingredient.Name</li>
+                    }
+                </ul>
             }
-        </ol>
-    }
-    else
-    {
-        <p>Select a recipe from a meal card to view details.</p>
-    }
-</div>
+            else
+            {
+                <p>No ingredients added yet.</p>
+            }
+        </div>
+
+        <div class="details-section">
+            <h3>Instructions</h3>
+
+            @if (SelectedRecipe.Steps is not null && SelectedRecipe.Steps.Any())
+            {
+                <ol class="details-list">
+                    @foreach (var step in SelectedRecipe.Steps.OrderBy(s => s.StepNumber))
+                    {
+                        <li>@step.Instruction</li>
+                    }
+                </ol>
+            }
+            else
+            {
+                <p>No instructions added yet.</p>
+            }
+        </div>
+    </div>
+}
 
 @code {
     [Parameter] public Recipe? SelectedRecipe { get; set; }
