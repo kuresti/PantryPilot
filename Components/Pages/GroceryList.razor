@@ -73,8 +73,8 @@
          return;
       }
 
-      // Build a flat list of (Category, Line) for all ingredients
-      var ingredientLines = new List<(IngredientCategory Category, string Line)>();
+      // Collect all items from the recipes, then aggregate by ingredient name and unit
+      var items = new List<(IngredientCategory Category, string Name, decimal Quantity, string Unit)>();
 
       foreach (var recipeId in recipeIds)
       {
@@ -97,19 +97,28 @@
                }
             }
 
-            var category = ingredient.Category;
-
-            // Simple display string "2 cups of flour"
-            var quantityText = ri.Quantity.ToString();
-            var unitText = string.IsNullOrWhiteSpace(ri.Unit) ? "" : $" {ri.Unit}";
-            var line = $"{quantityText}{unitText} {ingredient.Name}";
-
-            ingredientLines.Add((category, line));
+            // Add raw ingredient data to the list for later aggregation
+            items.Add((
+               ingredient.Category,
+               ingredient.Name,
+               ri.Quantity,
+               ri.Unit ?? ""
+            ));
          }
       }
 
+      // Aggregate quantities after the loop
+         var aggregated = items
+            .GroupBy(i => new { i.Category, i.Name, i.Unit })
+            .Select(g => new
+            {
+               g.Key.Category,
+               Line = $"{g.Sum(x => x.Quantity)} {(string.IsNullOrEmpty(g.Key.Unit) ? "" : $" {g.Key.Unit}")} {g.Key.Name}"
+            })
+            .ToList();
+
       // Group by IngredientCategory for SectionList
-      groupedIngredients = ingredientLines
+      groupedIngredients = aggregated
          .GroupBy(x => x.Category)
          .ToDictionary(
             g => g.Key,
