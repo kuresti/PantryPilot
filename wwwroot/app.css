@@ -108,16 +108,53 @@ hr {
 }
 
 /* Layout Container */
-.menu-container {
+/* .menu-container {
     text-align: center;
     padding: 2rem;
 
-}
+} */
 
 /* Header Section */
 .tagline { color: #666; margin-bottom: 0; }
 .main-title { font-size: 3rem; margin-top: 0; }
 .current-date { color: #ff5722; font-style: italic; font-weight: bold; margin-top: 2rem; }
+
+.planner-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    width: 100%
+}
+
+.recipe-sidebar {
+    position: sticky;
+    top: 1rem;
+    align-self: start;
+}
+
+.menu-content {
+    min-width: 0;
+}
+
+.sidebar-card,
+.content-card {
+    background: #fff;
+    border: 1px solid #DDE1ED;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.sidebar-title {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.menu-container {
+    min-width: 0;
+    width: 100%;
+}
 
 /* View Switcher Buttons */
 .view-switcher {
@@ -139,37 +176,55 @@ hr {
 
 /* Meal Grid and Cards */
 .meal-grid {
-    display: flex;
+    /* display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-    margin-top: 2rem;
+    margin-top: 2rem; */
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
 }
 
 /* for RecipeList.razor */
 .recipe-list {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 2rem;
+    gap: 1rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 100%
+}
+
+.daily-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
 }
 
 .meal-card {
     background: white;
     border: 1px solid #333;
     border-radius: 8px;
-    padding: 2rem;
-    width: 300px;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .meal-type { color: #666; font-size: 0.9rem; }
-.meal-name { font-size: 2.5rem; margin: 0.5rem 0; }
+.meal-name { 
+    font-size: 1.25rem; 
+    margin: 0.5rem 0; 
+    text-align: center;
+    padding: 1rem;
+}
 
 .meal-features {
     list-style: none;
@@ -272,4 +327,18 @@ hr {
 
 .subtle-border {
     border: #DDE1ED;
+}
+
+@media (max-width: 1100px) {
+    .planner-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .recipe-sidebar {
+        position: static;
+    }
+
+    .meal-grid {
+        grid-template-columns: 1fr;
+    }
 }
