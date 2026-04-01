@@ -102,7 +102,7 @@
                ingredient.Category,
                ingredient.Name,
                ri.Quantity,
-               ri.Unit ?? ""
+               NormalizeUnit(ri.Unit ?? "")
             ));
          }
       }
@@ -110,10 +110,16 @@
       // Aggregate quantities after the loop
          var aggregated = items
             .GroupBy(i => new { i.Category, i.Name, i.Unit })
-            .Select(g => new
+            .Select(g =>
             {
-               g.Key.Category,
-               Line = $"{g.Sum(x => x.Quantity)} {(string.IsNullOrEmpty(g.Key.Unit) ? "" : $" {g.Key.Unit}")} {g.Key.Name}"
+               var totalQty = g.Sum(x => x.Quantity);
+               var unit = PluralizeUnit(g.Key.Unit, totalQty);
+
+               return new
+               {              
+                  g.Key.Category,
+                  Line = $"{totalQty} {(string.IsNullOrWhiteSpace(unit) ? "" : $" {unit}")} {g.Key.Name}"
+               };
             })
             .ToList();
 
@@ -123,5 +129,53 @@
          .ToDictionary(
             g => g.Key,
             g => g.Select(x => x.Line).ToList());
+   }
+
+   // Normalize unit strings for better aggregation (e.g., "cup" vs "cups")
+   private string NormalizeUnit(string unit)
+   {
+      if (string.IsNullOrWhiteSpace(unit))
+      {
+         return "";
+      }
+
+      unit = unit.Trim().ToLower();
+
+      return unit switch
+      {
+         "cup" or "cups" => "cup",
+         "tablespoon" or "tablespoons" or "tbsp" => "tbsp",
+         "teaspoon" or "teaspoons" or "tsp" => "tsp",
+         "gram" or "grams" => "gram",
+         "kilogram" or "kilograms" => "kilogram",
+         "ounce" or "ounces" => "ounce",
+         "pound" or "pounds" => "pound",
+         "each" or "unit" or "units" => "each",
+         _ => unit // Return as-is if we don't have a normalization rule
+      };
+   }
+
+   // Pluralize unit based on quantity (e.g., "1 cup" vs "2 cups")
+   private string PluralizeUnit(string Unit, decimal Quantity)
+   {
+      if (string.IsNullOrWhiteSpace(Unit))
+      {
+         return "";
+      }
+
+      // Units that should NOT pluralize
+      if (Unit == "each")
+      {
+         return Unit;
+      }
+
+      // If quantity is 1, return singular form
+      if (Quantity == 1)
+      {
+         return Unit;
+      }
+
+      // Otherwise pluralize by adding 's'
+      return Unit + "s";
    }
 }
