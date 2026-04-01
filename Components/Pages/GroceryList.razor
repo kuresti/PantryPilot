@@ -114,11 +114,12 @@
             {
                var totalQty = g.Sum(x => x.Quantity);
                var unit = PluralizeUnit(g.Key.Unit, totalQty);
+               var qtyText = FormatQuantity(totalQty);
 
                return new
                {              
                   g.Key.Category,
-                  Line = $"{totalQty} {(string.IsNullOrWhiteSpace(unit) ? "" : $" {unit}")} {g.Key.Name}"
+                  Line = $"{qtyText} {(string.IsNullOrWhiteSpace(unit) ? "" : $" {unit}")} {g.Key.Name}"
                };
             })
             .ToList();
@@ -177,5 +178,13 @@
 
       // Otherwise pluralize by adding 's'
       return Unit + "s";
+   }
+
+   // Format quantities
+   private string FormatQuantity(decimal qty)
+   {
+      return qty % 1 == 0 
+      ? ((int)qty).ToString() // whole number, no decimals
+      : qty.ToString(); // fraction, keep decimals 
    }
 }
