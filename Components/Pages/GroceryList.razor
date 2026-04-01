@@ -1,11 +1,18 @@
 @page "/grocerylist"
 @rendermode InteractiveServer // for the header navigation
 
+@using Microsoft.IdentityModel.Tokens
+@using PantryPilot.Models
+@using PantryPilot.Services.Interfaces
+
 @* Added to prevent non-authenticated users
    from viewing this page *@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize];
 @inject NavigationManager NavigationManager
+@inject IWeeklyMenuService WeeklyMenuService
+@inject IRecipeService RecipeService
+@inject IIngredientService IngredientService
 
 <PageTitle>GroceryList</PageTitle>
 
@@ -19,11 +26,93 @@
    <div class="content-container">
       <SearchDropdown CustomClass="rounded-search m-0 p-0" />
       <div class="card-grid">
-         <SectionList></SectionList>
+         @if (groupedIngredients.Count == 0)
+         {
+            <p>No grocery items found.</p>
+         }
+         else
+         {
+            @foreach (var group in groupedIngredients)
+            {
+               <SectionList
+                  SectionTitle="@group.Key.ToString()"
+                  Ingredients="group.Value"
+               />
+            }
+         }
       </div>
    </div>
 </div>
 
 @code {
-    
+   // Category -> List of display string like "2 cups of flour"
+   private Dictionary<IngredientCategory, List<string>> groupedIngredients = new();
+
+   protected override async Task OnInitializedAsync()
+   {
+      // Get current user id
+      int userId = await RecipeService.GetCurrentUserId();
+
+      // Load the user's WeeklyMenu
+      var weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
+      if (weeklyMenu is null || weeklyMenu.Days is null || weeklyMenu.Days.Count == 0)
+      {
+         return;
+      }
+
+      // Collect all recipe ids for the entire week (Breakfast, Lunch, Dinner)
+      var recipeIds = weeklyMenu.Days
+         .SelectMany(d => new int?[] { d.BreakfastRecipeId, d.LunchRecipeId, d.DinnerRecipeId })
+         .Where(id => id.HasValue)
+         .Select(id => id!.Value)
+         .Distinct()
+         .ToList();
+
+      if (recipeIds.Count == 0)
+      {
+         return;
+      }
+
+      // Build a flat list of (Category, Line) for all ingredients
+      var ingredientLines = new List<(IngredientCategory Category, string Line)>();
+
+      foreach (var recipeId in recipeIds)
+      {
+         var recipe = await RecipeService.GetRecipe(recipeId);
+         if (recipe == null || recipe.RecipeIngredients == null)
+         {
+            continue;
+         }
+
+         foreach (var ri in recipe.RecipeIngredients)
+         {
+            // Make sure we have the ingredient loaded
+            var ingredient = ri.Ingredient;
+            if (ingredient == null)
+            {
+               ingredient = await IngredientService.GetByIdAsync(ri.IngredientId);
+               if (ingredient == null)
+               {
+                  continue; // Skip if we can't load the ingredient
+               }
+            }
+
+            var category = ingredient.Category;
+
+            // Simple display string "2 cups of flour"
+            var quantityText = ri.Quantity.ToString();
+            var unitText = string.IsNullOrWhiteSpace(ri.Unit) ? "" : $" {ri.Unit}";
+            var line = $"{quantityText}{unitText} {ingredient.Name}";
+
+            ingredientLines.Add((category, line));
+         }
+      }
+
+      // Group by IngredientCategory for SectionList
+      groupedIngredients = ingredientLines
+         .GroupBy(x => x.Category)
+         .ToDictionary(
+            g => g.Key,
+            g => g.Select(x => x.Line).ToList());
+   }
 }
