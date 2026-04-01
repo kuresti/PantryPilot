@@ -51,6 +51,7 @@ namespace PantryPilot.Services
             return await _context.Recipes
                 .Where(r => r.Id == id && r.UserId == userId)
                 .Include(r => r.RecipeIngredients)
+                    .ThenInclude(ri => ri.Ingredient)
                 .Include(r => r.Steps)
                 .FirstOrDefaultAsync();
         }
