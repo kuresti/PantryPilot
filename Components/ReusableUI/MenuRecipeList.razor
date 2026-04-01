@@ -5,9 +5,7 @@
 @using PantryPilot.Models
 
 <div class="recipe-list">
-    <h4>Recipes</h4>
-
-    @if (Recipes is null || !Recipes.Any())
+   @if (Recipes is null || !Recipes.Any())
     {
         <p><em>No recipes available</em></p>
     }
@@ -15,17 +13,30 @@
     {
         @foreach (var recipe in Recipes)
         {
-            <div class="recipe-card"          draggable="true"            @ondragstart="() => OnDragStarted.InvokeAsync(recipe.Id)">
-                <h5>@recipe.Name</h5>
-                <p>Prep: @recipe.PrepTime | Cook: @recipe.CookTime</p>
-                <p>Servings: @recipe.Servings</p>
+            <div class="recipe-list-card"
+                 draggable="true"
+                 @ondragstart="() => OnDragStarted.InvokeAsync(recipe.Id)">
+
+                <div class="recipe-list-card-header">
+                    <button type="button"
+                            class="recipe-list-link"
+                            @onclick="() => OnRecipeClicked.InvokeAsync(recipe.Id)">
+                         @recipe.Name   
+                    </button>
+                </div>
+
+                <div class="recipe-list-meta">
+                    <span>Prep: @recipe.PrepTime</span>
+                    <span>Cook: @recipe.CookTime</span>
+                    <span>Servings: @recipe.Servings</span>
+                </div>
             </div>
         }
     }
-
 </div>
 
 @code {
     [Parameter] public List<Recipe> Recipes { get; set; } = new();
     [Parameter] public EventCallback<int> OnDragStarted { get; set; }
+    [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
 }
