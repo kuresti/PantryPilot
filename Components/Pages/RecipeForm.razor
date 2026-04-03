@@ -83,16 +83,26 @@
             <div class="form-section">
                 <label class="form-label">Ingredients</label>
 
+                <p class="form-hint">Select an existing ingredient or select <strong>+</strong> to type a new one.</p>
+
                 @foreach (var (row, index) in ingredientRows.Select((r, i) => (r, i)))
                 {
                     <div class="ingredient-row">
-                        <select class="form-input ingredient-select" @bind="row.IngredientId">
-                            <option value="0">-- Select ingredient --</option>
-                            @foreach (var ing in allIngredients)
-                            {
-                                <option value="@ing.Id">@ing.Name</option>
-                            }
-                        </select>
+                        @if (row.IsCreatingNew){
+                            <input class="form-input ingredient-select"
+                            placeholder="New ingredient name"
+                            @bind="row.NewIngredientName" />
+                        }
+                        else
+                        {
+                            <select class="form-input ingredient-select" @bind="row.IngredientId">
+                                <option value="0">-- Select ingredient --</option>
+                                @foreach (var ing in allIngredients)
+                                {
+                                    <option value="@ing.Id">@ing.Name</option>
+                                }
+                            </select>
+                        }
 
                         <input class="form-input ingredient-qty"
                                type="number"
@@ -104,6 +114,13 @@
                         <input class="form-input ingredient-unit"
                                placeholder="Unit"
                                @bind="row.Unit" />
+
+                        <button type="button"
+                                class="btn-toggle-new"
+                                title="@(row.IsCreatingNew ? "Pick from existing ingredients" : "Create a new ingredient")"
+                                @onclick="() => ToggleNewIngredient(row)">
+                            @(row.IsCreatingNew ? "[...]" : "+")
+                        </button>
 
                         <button type="button"
                                 class="btn-remove"
@@ -156,19 +173,23 @@
     private Recipe? recipe;
     private List<Ingredient>? allIngredients;
 
-    // Local editable rows — decoupled from the model so we can add/remove freely
+    // Local editable rows; decoupled from the model so we can add/remove freely
     private List<IngredientRow> ingredientRows = new();
     private List<StepRow> stepRows = new();
 
     private string? errorMessage;
     private bool IsEditMode => Id.HasValue;
 
-    // ── Lightweight local row types ──────────────────────────────────────────
+    // Lightweight local row types ──────────────────────────────────────────
     private class IngredientRow
     {
         public int IngredientId { get; set; }
         public decimal Quantity { get; set; }
         public string Unit { get; set; } = "";
+
+        // New Ingredient
+        public bool IsCreatingNew {get; set;} = false;
+        public string NewIngredientName { get; set; } = "";
     }
 
     private class StepRow
@@ -176,7 +197,7 @@
         public string Instruction { get; set; } = "";
     }
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    // Lifecycle ────────────────────────────────────────────────────────────
     protected override async Task OnInitializedAsync()
     {
         allIngredients = await IngredientService.GetAllAsync();
@@ -230,14 +251,28 @@
         }
     }
 
-    // ── Row management ───────────────────────────────────────────────────────
+    // Row management ───────────────────────────────────────────────────────
     private void AddIngredientRow() => ingredientRows.Add(new IngredientRow());
     private void RemoveIngredientRow(int index) => ingredientRows.RemoveAt(index);
 
     private void AddStepRow() => stepRows.Add(new StepRow());
     private void RemoveStepRow(int index) => stepRows.RemoveAt(index);
 
-    // ── Save ─────────────────────────────────────────────────────────────────
+    // If creating a new ingredient
+    private void ToggleNewIngredient(IngredientRow row)
+    {
+        row.IsCreatingNew = !row.IsCreatingNew;
+        // Reset the opposite field when switching modes
+        if (row.IsCreatingNew){
+            row.IngredientId = 0;
+        }
+        else
+        {
+            row.NewIngredientName = "";
+        }
+    }
+
+    // Save ─────────────────────────────────────────────────────────────────
     private async Task SaveRecipe()
     {
         errorMessage = null;
@@ -250,18 +285,56 @@
             return;
         }
 
-        // Build RecipeIngredients from rows
-        recipe.RecipeIngredients = ingredientRows
-            .Where(r => r.IngredientId > 0)
-            .Select(r => new RecipeIngredient
-            {
-                IngredientId = r.IngredientId,
-                Quantity = r.Quantity,
-                Unit = r.Unit
-            })
-            .ToList();
+        // Create any new ingredients first, then build RecipeIngredients from rows
+        var builtIngredients = new List<RecipeIngredient>();
 
-        // Build Steps from rows
+        foreach (var row in ingredientRows)
+        {
+            int ingredientId;
+
+            if (row.IsCreatingNew)
+            {
+                // Skip rows where the user didn't type a name
+                if (string.IsNullOrWhiteSpace(row.NewIngredientName))
+                    continue;
+
+                // Check if it already exists (IngredientService.AddAsync deduplicates,
+                // but we need the Id back, so look it up after adding)
+                await IngredientService.AddAsync(new Ingredient
+                {
+                    Name = row.NewIngredientName.Trim(),
+                    Category = IngredientCategory.Other
+                });
+
+                // Refresh the list so we can find the new ingredient's Id
+                allIngredients = await IngredientService.GetAllAsync();
+
+                var created = allIngredients.FirstOrDefault(i =>
+                    i.Name.Equals(row.NewIngredientName.Trim(), StringComparison.OrdinalIgnoreCase));
+
+                if (created == null)
+                    continue;
+
+                ingredientId = created.Id;
+            }
+            else
+            {
+                if (row.IngredientId <= 0)
+                    continue;
+
+                ingredientId = row.IngredientId;
+            }
+
+            builtIngredients.Add(new RecipeIngredient
+            {
+                IngredientId = ingredientId,
+                Quantity = row.Quantity,
+                Unit = row.Unit
+            });
+        }
+
+        recipe.RecipeIngredients = builtIngredients;
+
         recipe.Steps = stepRows
             .Where(s => !string.IsNullOrWhiteSpace(s.Instruction))
             .Select((s, i) => new RecipeStep
@@ -273,7 +346,7 @@
 
         if (IsEditMode)
         {
-            // Delete old ingredients and steps, then recreate
+            // Delete old ingredients and steps, then recreate        
             var existingIngredients = await RecipeIngredientService.GetByRecipeIdAsync(recipe.Id);
             foreach (var ri in existingIngredients)
                 await RecipeIngredientService.DeleteAsync(ri.Id);
@@ -281,7 +354,7 @@
             var existingSteps = await RecipeStepService.GetByRecipeIdAsync(recipe.Id);
             foreach (var step in existingSteps)
                 await RecipeStepService.DeleteAsync(step.Id);
-
+                
             // Attach RecipeId before saving
             foreach (var ri in recipe.RecipeIngredients)
                 ri.RecipeId = recipe.Id;
