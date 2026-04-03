@@ -13,6 +13,7 @@
 @inject IWeeklyMenuService WeeklyMenuService
 @inject IRecipeService RecipeService
 @inject IIngredientService IngredientService
+@inject IJSRuntime JS
 
 <PageTitle>GroceryList</PageTitle>
 
@@ -24,6 +25,7 @@
    </div>
 
    <div class="content-container">
+      <button class="btn btn-primary mb-3" @onclick="PrintList">Print List</button>
       <div class="card-grid">
          @if (groupedIngredients.Count == 0)
          {
@@ -184,5 +186,11 @@
       return qty % 1 == 0 
       ? ((int)qty).ToString() // whole number, no decimals
       : qty.ToString(); // fraction, keep decimals 
+   }
+
+   // Print the grocery list using JavaScript interop
+   private void PrintList()
+   {
+      JS.InvokeVoidAsync("window.print");
    }
 }
