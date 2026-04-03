@@ -1,7 +1,7 @@
 /* Styling for monthly calendar*/
 
 .monthly-view {
-    display: felx;
+    display: flex;
     flex-direction: column;
     gap: 1rem;
 }
