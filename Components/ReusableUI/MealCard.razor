@@ -20,16 +20,9 @@
             </button>
         </h2>
 
-        <ul class="meal-features">
-            @foreach (var feature in recipeFeatures)
-            {
-                <li>@feature</li>
-            }
-        </ul>
-
-        <button type="button"                class="btn-cook"                @onclick="() => OnRecipeClicked.InvokeAsync(assignedRecipe.Id)">
+        @* <button type="button"                class="btn-cook"                @onclick="() => OnRecipeClicked.InvokeAsync(assignedRecipe.Id)">
             View Recipe
-        </button>
+        </button> *@
     }
     else
     {
@@ -38,9 +31,9 @@
             <li>Drag from recipe list</li>
         </ul>
 
-        <button type="button" class="btn-cook" disabled>
+        @* <button type="button" class="btn-cook" disabled>
             No Recipe Selected
-        </button>
+        </button> *@
     }
 
 </div>

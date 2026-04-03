@@ -1,0 +1,27 @@
+/* Styling for Weekly Menu Grid */
+
+.weekly-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.weekly-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.week-nav-btn {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.weekly-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
