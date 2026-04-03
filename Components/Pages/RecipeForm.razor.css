@@ -158,6 +158,11 @@
     min-width: 0;
 }
 
+.ingredient-cat {
+    flex: 1;
+    min-width: 0;
+}
+
 /* ── Step rows ────────────────────────────────────────────────────────────── */
 .step-row {
     display: flex;
