@@ -26,7 +26,8 @@
             <DayMenuPanel Date="date"
                           MenuDay="day"
                           OnRecipeDropped="OnRecipeDropped"
-                          OnRecipeClicked="OnRecipeClicked" />
+                          OnRecipeClicked="OnRecipeClicked"
+                          OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
         }
     </div>
 </div>
@@ -39,6 +40,7 @@
     [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
     [Parameter] public EventCallback OnPreviousWeek { get; set; }
     [Parameter] public EventCallback OnNextWeek { get; set; }
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRemoveFromMealClicked { get; set; }
 
     private List<DateOnly> GetWeekDates()
     {
