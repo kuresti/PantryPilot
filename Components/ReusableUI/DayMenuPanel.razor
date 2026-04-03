@@ -11,19 +11,22 @@
                   MealType="MealType.Breakfast"
                   RecipeId="MenuDay?.BreakfastRecipeId"
                   OnRecipeDropped="OnRecipeDropped"
-                  OnRecipeClicked="OnRecipeClicked" />
+                  OnRecipeClicked="OnRecipeClicked"
+                  OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
 
         <MealCard Date="Date"
                   MealType="MealType.Lunch"
                   RecipeId="MenuDay?.LunchRecipeId"
                   OnRecipeDropped="OnRecipeDropped"
-                  OnRecipeClicked="OnRecipeClicked" />
+                  OnRecipeClicked="OnRecipeClicked"
+                  OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
                 
         <MealCard Date="Date"
                   MealType="MealType.Dinner"
                   RecipeId="MenuDay?.DinnerRecipeId"
                   OnRecipeDropped="OnRecipeDropped"
-                  OnRecipeClicked="OnRecipeClicked" />
+                  OnRecipeClicked="OnRecipeClicked"
+                  OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
     </div>
 </div>
 
@@ -34,4 +37,6 @@
     [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRecipeDropped { get; set; }
 
     [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
+
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRemoveFromMealClicked { get; set; }
 }
