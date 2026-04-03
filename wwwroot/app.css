@@ -238,6 +238,36 @@ hr {
     color: #333;
 }
 
+/* MealCard Remove btn styling */
+.meal-card-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+.meal-action-btn {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+.meal-action-btn:hover {
+    background: #f3f3f3;
+}
+
+.remove-btn {
+    border-color: #d9534f;
+    color: #d9534f;
+}
+
+.remove-btn:hover {
+    background: #fff1f0;
+}
+
 /* Cook Button Styling */
 .btn-cook {
     background: #444;

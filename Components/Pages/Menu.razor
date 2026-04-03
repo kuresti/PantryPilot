@@ -71,19 +71,22 @@
                                   MealType="MealType.Breakfast"
                                   RecipeId="selectedMenuDay?.BreakfastRecipeId"
                                   OnRecipeDropped="HandleRecipeDropped"
-                                  OnRecipeClicked="HandleRecipeClicked" />
+                                  OnRecipeClicked="HandleRecipeClicked"
+                                  OnRemoveFromMealClicked="HandleRemoveFromMealClicked" />
                         
                         <MealCard Date="selectedDate"
                                   MealType="MealType.Lunch"
                                   RecipeId="selectedMenuDay?.LunchRecipeId"
                                   OnRecipeDropped="HandleRecipeDropped"
-                                  OnRecipeClicked="HandleRecipeClicked" />
+                                  OnRecipeClicked="HandleRecipeClicked"
+                                  OnRemoveFromMealClicked="HandleRemoveFromMealClicked" />
 
                         <MealCard Date="selectedDate"
                                   MealType="MealType.Dinner"
                                   RecipeId="selectedMenuDay?.DinnerRecipeId"
                                   OnRecipeDropped="HandleRecipeDropped"
-                                  OnRecipeClicked="HandleRecipeClicked" />
+                                  OnRecipeClicked="HandleRecipeClicked" 
+                                  OnRemoveFromMealClicked="HandleRemoveFromMealClicked"/>
                     </div>
                 }
                 else if (currentView == MenuViewMode.Weekly)
@@ -93,7 +96,8 @@
                                     OnRecipeDropped="HandleRecipeDropped"
                                     OnRecipeClicked="HandleRecipeClicked"
                                     OnPreviousWeek="PreviousWeek"
-                                    OnNextWeek="NextWeek" />
+                                    OnNextWeek="NextWeek" 
+                                    OnRemoveFromMealClicked="HandleRemoveFromMealClicked"/>
                 }
                 else if (currentView == MenuViewMode.Monthly)
                 {
@@ -299,6 +303,25 @@
     private void CloseRecipeDetails()
     {
         selectedRecipe = null;
+    }
+
+    private async Task HandleRemoveFromMealClicked((DateOnly date, MealType mealType) args)
+    {
+        int userId = await RecipeService.GetCurrentUserId();
+
+        await WeeklyMenuService.RemoveRecipeFromMealAsync(userId, args.date, args.mealType);
+
+        weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
+
+        if (weeklyMenu is not null)
+        {
+            selectedMenuDay = weeklyMenu.Days.FirstOrDefault(d => d.Date == selectedDate);
+        }
+
+        if (selectedRecipe is not null)
+        {
+            selectedRecipe = null;
+        }
     }
 
 

@@ -119,5 +119,44 @@ namespace PantryPilot.Services
             return true;
         }
 
+        public async Task<bool> RemoveRecipeFromMealAsync(int userId, DateOnly date, MealType mealType)
+        {
+            var weeklyMenu = await _context.WeeklyMenus
+                .Include(wm => wm.Days)
+                .FirstOrDefaultAsync(wm => wm.UserId == userId);
+
+            if (weeklyMenu == null)
+            {
+                return false;
+            }
+
+            var menuDay = weeklyMenu.Days.FirstOrDefault(d => d.Date == date);
+
+            if (menuDay == null)
+            {
+                return false;
+            }
+
+            switch (mealType)
+            {
+                case MealType.Breakfast:
+                    menuDay.BreakfastRecipeId = null;
+                    break;
+
+                case MealType.Lunch:
+                    menuDay.LunchRecipeId = null;
+                    break;
+
+                case MealType.Dinner:
+                    menuDay.DinnerRecipeId = null;
+                    break;
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
+
+    
 }
