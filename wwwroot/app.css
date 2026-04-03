@@ -359,6 +359,40 @@ hr {
     border: #DDE1ED;
 }
 
+/* Auth Pages (Login, Register) */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 3rem 1rem 4rem;
+    min-height: 100vh;
+    background-color: #f7f7f9;
+}
+ 
+.auth-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 480px;
+}
+ 
+.auth-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #1a1a2e;
+    margin-bottom: 0.25rem;
+}
+ 
+.auth-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
 @media (max-width: 1100px) {
     .planner-layout {
         grid-template-columns: 1fr;

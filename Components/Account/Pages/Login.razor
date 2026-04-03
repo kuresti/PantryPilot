@@ -13,14 +13,13 @@
 
 <PageTitle>Log in</PageTitle>
 
-<h1>Log in</h1>
-<div class="row">
-    <div class="col-lg-6">
-        <section>
+<div class="auth-page">
+    <div class="auth-card">
+        <h1 class="auth-title">Log in</h1>
             <StatusMessage Message="@errorMessage" />
             <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
+                <h2 class="auth-subtitle">Use a local account to log in.</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
@@ -60,15 +59,14 @@
                     </p>
                 </div>
             </EditForm>
-        </section>
     </div>
-    <div class="col-lg-4 col-lg-offset-2">
+    @* <div class="col-lg-4 col-lg-offset-2">
         <section>
             <h3>Use another service to log in.</h3>
             <hr />
             <ExternalLoginPicker />
         </section>
-    </div>
+    </div> *@
 </div>
 
 @code {
