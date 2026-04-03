@@ -26,7 +26,8 @@
 
    <div class="content-container">
       <button class="btn btn-primary mb-3" @onclick="PrintList">Print List</button>
-      <div class="card-grid">
+      <div class="print-area">
+         <div class="card-grid">
          @if (groupedIngredients.Count == 0)
          {
             <p>No grocery items found.</p>
@@ -41,6 +42,7 @@
                />
             }
          }
+         </div>
       </div>
    </div>
 </div>
