@@ -92,6 +92,14 @@
                             <input class="form-input ingredient-select"
                             placeholder="New ingredient name"
                             @bind="row.NewIngredientName" />
+
+                            <select class="form-input ingredient-cat" @bind="row.NewIngredientCategory">
+                            @foreach (var cat in Enum.GetValues<IngredientCategory>())
+                                {
+                                    <option value="@cat">@cat</option>
+                                }
+
+                            </select>
                         }
                         else
                         {
@@ -190,6 +198,7 @@
         // New Ingredient
         public bool IsCreatingNew {get; set;} = false;
         public string NewIngredientName { get; set; } = "";
+        public IngredientCategory NewIngredientCategory {get; set;} = IngredientCategory.Other;
     }
 
     private class StepRow
@@ -303,7 +312,7 @@
                 await IngredientService.AddAsync(new Ingredient
                 {
                     Name = row.NewIngredientName.Trim(),
-                    Category = IngredientCategory.Other
+                    Category = row.NewIngredientCategory
                 });
 
                 // Refresh the list so we can find the new ingredient's Id
