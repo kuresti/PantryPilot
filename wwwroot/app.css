@@ -406,3 +406,26 @@ hr {
         grid-template-columns: 1fr;
     }
 }
+
+/* Print Grocery List */
+@media print {
+    /* Hide everything except the grocery list content */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show the grocery list container and its contents */
+    .print-area, .print-area * {
+        visibility: visible;
+    }
+
+    /* Position it cleanly for printing */
+    .print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 16px;
+        background: white;
+    }
+}
