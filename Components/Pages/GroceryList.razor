@@ -65,7 +65,6 @@
          .SelectMany(d => new int?[] { d.BreakfastRecipeId, d.LunchRecipeId, d.DinnerRecipeId })
          .Where(id => id.HasValue)
          .Select(id => id!.Value)
-         .Distinct()
          .ToList();
 
       if (recipeIds.Count == 0)
