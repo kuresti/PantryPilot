@@ -1,0 +1,6 @@
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: auto, auto, auto; /* creates 3 evenly sized columns */
+    gap: 20px; /* add space between grid items */
+}

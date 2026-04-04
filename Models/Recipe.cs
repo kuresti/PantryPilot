@@ -8,6 +8,7 @@ namespace PantryPilot.Models
         public int PrepTime { get; set; }  
         public int CookTime { get; set; }  
         public int Servings { get; set; }
+        public bool IsFavorite { get; set; }
 
         // Foreign Key and navigation to ApplicationUser
         public int UserId { get; set; }

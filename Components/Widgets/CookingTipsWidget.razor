@@ -1,0 +1,93 @@
+@using MudBlazor
+@using PantryPilot.Models
+@using PantryPilot.Services.Interfaces
+@* this makes the widget Shuffle button work *@
+@rendermode InteractiveServer
+@inject IRecipeService RecipeService
+@inject PantryPilot.Services.DashboardStateService DashboardService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<MudCard Outlined="true" Class="ma-4" Style="width: 300px;">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Cooking Tips</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent Style="height: 250px; overflow-y: auto;">
+    @{
+        var currentTip = _cookingAdvice[_currentIndex];
+    }
+    
+    @* Position the Key at the top *@
+    <div class="d-flex justify-space-between align-center mb-2">
+        @* <MudText Typo="Typo.overline" Color="Color.Secondary">Category</MudText> *@
+        <MudChip T="string" Size="Size.Small" Color="Color.Info" Variant="Variant.Text">
+            @currentTip.Category
+        </MudChip>
+    </div>
+
+    <MudPaper Elevation="0" Class="pa-4 rounded-lg" Style="background-color: var(--mud-palette-background-grey);">
+        <MudText Typo="Typo.body1">"@currentTip.Advice"</MudText>
+    </MudPaper>
+</MudCardContent>
+
+    <MudCardActions>
+        <MudButton Variant="Variant.Text"
+                   Color="Color.Primary"
+                   OnClick="DisplayCookingTips"
+                   StartIcon="@Icons.Material.Filled.NavigateNext">
+            Next Tip
+        </MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    public class CookingTip
+    {
+        public string Category { get; set; }
+        public string Advice { get; set; }
+    }
+    public List<CookingTip> _cookingAdvice = new()
+        {
+            new CookingTip { Category = "Preparation & Efficiency", Advice = "Gather, chop, and measure all ingredients before turning on the heat."},
+            new CookingTip { Category = "Preparation & Efficiency", Advice = "Clean as you cook. It keeps your space manageable and makes cleanup a cinch."},
+            new CookingTip { Category = "Preparation & Efficiency", Advice = "A sharp knife is safer and more efficient than a dull one."},
+            new CookingTip { Category = "Preparation & Efficiency", Advice = "Cut vegetables and meats to uniform sizes for even cooking."},
+            new CookingTip { Category = "Flavor & Technique", Advice = "Cook in batches. Too much food in the pan lowers the temperature and cause steaming rather than browning."},
+            new CookingTip { Category = "Flavor & Technique", Advice = "Taste and season throughout the process, not just at the end."},
+            new CookingTip { Category = "Flavor & Technique", Advice = "If a dish tastes flat, add a squeeze of lemon or a dash of vinegar to brighten it up."},
+            new CookingTip { Category = "Flavor & Technique", Advice = "Cook spices in oil for a minute to release their full flavor."},
+            new CookingTip { Category = "Flavor & Technique", Advice = "Pat meat and fish dry with paper towels for a better crust."},
+            new CookingTip { Category = "Pro Tips & Tricks", Advice = "Let meat sit for 5-10 minutes after cooking to keep it juicy."},
+            new CookingTip { Category = "Pro Tips & Tricks", Advice = "Add a splash of starchy pasta water to your sauce to help it cling to the pasta."},
+            new CookingTip { Category = "Pro Tips & Tricks", Advice = "Use a honing steel to maintain your knife's edge."},
+            new CookingTip { Category = "Pro Tips & Tricks", Advice = "Oil measuring cups/spoons before measuring sticky ingredients like honey or peanut butter."},
+            new CookingTip { Category = "Pro Tips & Tricks", Advice = "Remove protein from heat slightly underdone, as it will continue to cook while resting."},
+            new CookingTip { Category = "Advanced Texture & Browning", Advice = "A tiny pinch of baking soda can accelerate browning by raising the surface pH of your food. This is especially effective for quickly caramelizing onions."},
+            new CookingTip { Category = "Advanced Texture & Browning", Advice = "For the best possible sear on meat, salt it 18-24 hours before cooking and leave it uncovered in the fridge. This dries out the surface, allowing the Maillard reaction to happen almost instantly."},
+            new CookingTip { Category = "Advanced Texture & Browning", Advice = "When thickening a sauce with cornstarch, always mix it with cold water first. Using hot liquid will cause the starch to clump immediately, resulting in a lumpy sauce."}
+        };
+
+    private int _currentIndex = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var random = new Random();
+        _currentIndex = random.Next(_cookingAdvice.Count);
+        // Subscribe to changes so the UI refreshes when a widget is toggled
+        DashboardService.OnChange += StateHasChanged;
+    }
+    
+    public void DisplayCookingTips()
+    {
+        // % ensures that if _currentIndex + 1 == Count, it resets to 0
+        _currentIndex = (_currentIndex + 1) % _cookingAdvice.Count;
+    }
+
+    public void Dispose()
+    {
+        //Unsubscribe to prevent memory leaks
+        DashboardService.OnChange -= StateHasChanged;
+    }
+}

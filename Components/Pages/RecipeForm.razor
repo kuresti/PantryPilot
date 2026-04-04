@@ -45,6 +45,13 @@
             </div>
 
             <div class="form-section">
+                <label class="form-label">
+                    <input type="checkbox" @bind="recipe.IsFavorite" />
+                    Mark as Favorite
+                </label>
+            </div>
+
+            <div class="form-section">
                 <label class="form-label" for="recipeDesc">Description</label>
                 <textarea id="recipeDesc"
                           class="form-textarea"
@@ -217,6 +224,7 @@
             {
                 Name = "",
                 Description = "",
+                IsFavorite = false,
                 PrepTime = 0,
                 CookTime = 0,
                 Servings = 1,
