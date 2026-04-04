@@ -381,7 +381,7 @@
             await RecipeService.UpdateRecipe(recipe);
 
             foreach (var ri in recipe.RecipeIngredients)
-                await RecipeIngredientService.AddAsync(ri);
+                await RecipeIngredientService.UpdateAsync(ri);
             foreach (var s in recipe.Steps)
                 await RecipeStepService.AddAsync(s);
         }
