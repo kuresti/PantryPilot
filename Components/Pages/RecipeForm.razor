@@ -383,7 +383,7 @@
             foreach (var ri in recipe.RecipeIngredients)
                 await RecipeIngredientService.UpdateAsync(ri);
             foreach (var s in recipe.Steps)
-                await RecipeStepService.AddAsync(s);
+                await RecipeStepService.UpdateAsync(s);
         }
         else
         {
