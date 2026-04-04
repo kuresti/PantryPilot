@@ -1,6 +1,7 @@
 ﻿@page "/"
 @rendermode InteractiveServer // for the header navigation
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Home</PageTitle>
 
@@ -8,7 +9,7 @@
     <div class="hero-container">    @* the header section *@
         <h1 class="content-container">
             All of your favorite recipes in one place
-            <button class="hero-button">Get Started</button>
+            <button class="hero-button" @onclick='() => NavigationManager.NavigateTo("/Account/Login")'>Get Started</button>
         </h1>
     </div>
 
@@ -35,6 +36,14 @@
     </div>
 </div>
 
-@code{
-    
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            // If users are logged in and try to visit Home, kick them over to the Account dashboard immediately
+            NavigationManager.NavigateTo("/account");
+        }
+    }
 }

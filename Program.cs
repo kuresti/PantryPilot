@@ -7,6 +7,7 @@ using PantryPilot.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Components.Authorization;
 using PantryPilot.Components.Account;
+using MudBlazor.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IMenuDayService, MenuDayService>();
 builder.Services.AddScoped<IWeeklyMenuService, WeeklyMenuService>();
 builder.Services.AddScoped<IGroceryListService, GroceryListService>();
 builder.Services.AddScoped<IGroceryListItemService, GroceryListItemService>();
+builder.Services.AddScoped<DashboardStateService>();
 
 // Adds authentication state
 builder.Services.AddCascadingAuthenticationState();
@@ -62,6 +64,9 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 builder.Services.AddAuthorization();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+// MudBlazor package for some UI elements
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 

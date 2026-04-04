@@ -1,0 +1,72 @@
+@page "/account"
+@inject DashboardStateService DashboardStateService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@using MudBlazor
+@using PantryPilot.Components.ReusableUI
+@using PantryPilot.Components.Widgets
+@using PantryPilot.Models
+@using PantryPilot.Services
+@using PantryPilot.Services.Interfaces
+
+
+@* Added to prevent non-authenticated users
+   from viewing this page *@
+@attribute [Authorize]
+
+<PageTitle>Account</PageTitle>
+
+@* The container that only displays the widgets. Loops through the ActiveWidgets 
+   list. Each widget handles its own logic *@
+<div class="main-page-bg">
+   <div class="hero-container">
+      <div class="content-container">
+         <h1>Dashboard</h1>
+      </div>
+   </div>
+   <div class="content-container">
+      <div class="dashboard-grid">
+         @foreach (var widget in DashboardStateService.ActiveWidgets)
+         {
+            @if (widget == DashboardStateService.DashboardState.FavoriteRecipes)
+            {
+               <FavoriteRecipesWidget />
+            }
+            @* else if (widget == DashboardStateService.DashboardState.Ingredients)
+            {
+               <IngredientsMostUsed />
+            } *@
+            else if (widget == DashboardStateService.DashboardState.DinnerSuggestion)
+            {
+               <DinnerRandomPick />
+            }
+            else if (widget == DashboardStateService.DashboardState.CookingTips)
+            {
+               <CookingTipsWidget />
+            }
+         }
+      </div>
+   </div>
+</div>
+
+@code {
+
+   // create and use the event
+   protected override void OnInitialized()
+   {
+      // Removing the parentheses from StateHasChanged keeps this line from
+      // executing immediately. Without the () it allows it to execute only
+      // whenever the event fires.
+      DashboardStateService.OnChange += StateHasChanged;
+   }
+
+   // dispose of the event to prevent a memory leak
+   public void Dispose()
+   {
+      DashboardStateService.OnChange -= StateHasChanged;
+   }
+}
+

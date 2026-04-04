@@ -14,7 +14,7 @@
 
 <div class="navbar px-3">
     @* Brand Logo *@
-    <a class="navbar-brand" href="">
+    <a class="navbar-brand" href="@(displayName != null ? "account" : "")">
         <img src="images/PantryPilotLogo.png" alt="PantryPilot Logo" height="95" />
     </a>
 
@@ -25,14 +25,18 @@
 
     @* The Single Collapsible Container *@
     <div class="@NavMenuCssClass nav-elements ms-auto">
-        
-        @* Home button *@
         <nav class="d-flex align-items-center me-4">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-                </NavLink>
-            </div>
+        
+        <AuthorizeView>
+            <NotAuthorized>
+                @* Home button *@
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
 
             @* Menu button *@
             <div class="nav-item px-3">
@@ -87,7 +91,7 @@
 
                     @* Account button *@
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Account/Manage/Index">
+                        <NavLink class="nav-link" href="/account">
                             Account
                         </NavLink>
                     </div>

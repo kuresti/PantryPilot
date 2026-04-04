@@ -1,0 +1,54 @@
+@using PantryPilot.Models
+@using PantryPilot.Services.Interfaces
+@using MudBlazor
+@inject IRecipeService RecipeService
+@inject PantryPilot.Services.DashboardStateService DashboardService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+@rendermode InteractiveServer
+
+<MudCard Outlined="true" Class="ma-4" Style="width: 300px;">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Favorite Recipes</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Error" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (_favorites != null && _favorites.Any())
+        {
+            <MudList T="string">
+                @foreach (var recipe in _favorites)
+                {
+                    <MudListItem Text="@recipe.Name"
+                                 Icon="@Icons.Material.Filled.RestaurantMenu"
+                                 Href="@($"/recipe/{recipe.Id}")" />
+                }
+            </MudList>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2">No favorites yet. Start favoriting recipes in your cookbook!</MudText>
+        }
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private List<Recipe> _favorites = new();
+    protected override async Task OnInitializedAsync()
+    {
+        var allRecipes = await RecipeService.GetUserRecipes();
+        // Filter the list to only show favorites
+        _favorites = allRecipes.Where(r => r.IsFavorite).Take(4).ToList();
+        // Subscribe to changes so the UI refreshes when a widget is toggled
+        DashboardService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        //Unsubscribe to prevent memory leaks
+        DashboardService.OnChange -= StateHasChanged;
+    }
+}

@@ -1,0 +1,69 @@
+@using MudBlazor
+@using PantryPilot.Models
+@using PantryPilot.Services.Interfaces
+@* this makes the widget Shuffle button work *@
+@rendermode InteractiveServer
+@inject IRecipeService RecipeService
+@inject PantryPilot.Services.DashboardStateService DashboardService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<MudCard Outlined="true" Class="ma-4" Style="width: 300px;">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">What's for Dinner?</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudField Label="Today's Suggestion" Variant="Variant.Outlined" Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Restaurant">
+            @_suggestRecipe
+        </MudField>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="PickRandomRecipe">Shuffle</MudButton>
+        <MudButton Variant="Variant.Text" 
+           Color="Color.Secondary" 
+           Disabled="@(!_selectedRecipeId.HasValue)"
+           OnClick="@(() => NavigationManager.NavigateTo($"/recipe/{_selectedRecipeId}"))">
+    View Recipe
+</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    private List<Recipe?> _allUserRecipes;
+    private string _suggestRecipe = "Click to decide!";
+    private Random _random = new Random();
+    private int? _selectedRecipeId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Pull the list of user recipes
+        _allUserRecipes = await RecipeService.GetUserRecipes();
+
+        // Subscribe to changes so the UI refreshes when a widget is toggled
+        DashboardService.OnChange += StateHasChanged;
+    }
+    
+    public void PickRandomRecipe()
+    {
+        if (_allUserRecipes != null && _allUserRecipes.Any())
+        {
+            int index = _random.Next(_allUserRecipes.Count);
+            _selectedRecipeId = _allUserRecipes[index]?.Id;
+            _suggestRecipe = _allUserRecipes[index]?.Name ?? "Unnamed recipe";
+        }
+        else
+        {
+            _suggestRecipe = "No recipes found!";
+            _selectedRecipeId = null;
+        }
+    }
+
+    public void Dispose()
+    {
+        //Unsubscribe to prevent memory leaks
+        DashboardService.OnChange -= StateHasChanged;
+    }
+}
