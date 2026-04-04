@@ -393,6 +393,26 @@ hr {
     margin-bottom: 0.5rem;
 }
 
+/* Print Styles */
+.print-area,
+.print-header,
+.print-subheader {
+    display: none;
+}
+
+/* Grocery List */
+.grocery-item {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-card ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
 @media (max-width: 1100px) {
     .planner-layout {
         grid-template-columns: 1fr;
@@ -404,5 +424,105 @@ hr {
 
     .meal-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Print Grocery List */
+@media print {
+    /* Hide nav + hero */
+    .hero-container,
+    nav,
+    header,
+    .main-page-bg > .hero-container {
+        display: none;
+    }
+
+    /* Hide screen grocery list */
+    .card-grid,
+    .btn, button,
+    h1 {
+        display: none;
+    }
+
+    .content-container,
+    .main-page-bg,
+    .hero-container {
+        display: block;
+        text-align: left;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Show the print layout */
+    .print-area {
+        display: block;
+        padding: 16px 24px;
+        background: white;
+        line-height: 1.4;
+        text-align: left;
+        width: 100%;
+        margin: 0;
+    }
+
+    /* Print header */
+    .print-header {
+        display: block;
+        text-align: center;
+        margin-bottom: 6px;
+    }
+
+    .print-header h2 {
+        font-size: 20px;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    /* Print subheader */
+    .print-subheader {
+        display: block;
+        text-align: center;
+        margin-bottom: 14px;
+        font-size: 14px;
+    }
+
+    /* Category blocks */
+
+    .feature-card,
+    .feature-card * {
+        box-shadow: none;
+        background: none;
+        border: none;
+    }
+
+    .feature-card {
+        display: block;
+        margin: 0 0 4px 0;
+        padding: 10px 0;
+    }
+
+    .feature-card h3 {
+        font-size: 17px;
+        margin: 0 0 4px 0;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    /* Ingredient list */
+    .feature-card ul {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+
+    .grocery-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 2px 0;
+        list-style: none;
+    }
+
+    .grocery-item span {
+        font-size: 14px;
     }
 }
