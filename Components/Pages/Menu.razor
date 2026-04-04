@@ -1,6 +1,7 @@
 @page "/menu"
 @rendermode InteractiveServer
 
+@using Microsoft.AspNetCore.Components.Sections
 @using PantryPilot.Components.ReusableUI
 @using PantryPilot.Models
 @using PantryPilot.Services.Interfaces
@@ -9,55 +10,121 @@
 @* Added to prevent non-authenticated users
    from viewing this page *@
 @using Microsoft.AspNetCore.Authorization
+@using System.Runtime.CompilerServices
 @attribute [Authorize];
 @inject NavigationManager NavigationManager
 @inject IRecipeService RecipeService
 @inject IWeeklyMenuService WeeklyMenuService
 
 <PageTitle>Menu</PageTitle>
+
+
 <div class="planner-layout">
-    <MenuRecipeList Recipes="recipes"
-                OnDragStarted="HandleDragStarted" />
+    <aside class="recipe-sidebar">
+        <div class="sidebar-card">
+            <h3 class="sidebar-title">Recipes</h3>
 
-<div class="menu-container">
-    <header class="menu-header">
-        <p class="tagline">Plan your meals</p>
-        <h1 class="main-title">Menu</h1>
-        <p class="description">Drag recipes into Breakfast, Lunch, and Dinner.</p>
-
-        <div class="view-switcher">
-            <button type="button" class="view-btn active">Daily</button>
-            <button type="button" class="view-btn">Weekly</button>
-            <button type="button" class="view-btn">Monthly</button>
+            <MenuRecipeList Recipes="recipes"
+                            OnDragStarted="HandleDragStarted"
+                            OnRecipeClicked="HandleRecipeClicked" />
         </div>
+    </aside>
 
-        <p class="current-date">
-            Date: <span>@selectedDate.ToString("MMMM d, yyyy")</span>
-        </p>
-    </header>
+    <section class="menu-content">
+        <div class="content-card">
+            <header class="menu-header">
+                <p class="tagline">Plan your meals</p>
+                <h1 class="main-title">Menu</h1>
+                <p class="description">Drag recipes into Breakfast, Lunch, and Dinner.</p>
 
-    <div class="meal-grid">
-        <MealCard Date="selectedDate"
-                  MealType="MealType.Breakfast"
-                  RecipeId="selectedMenuDay?.BreakfastRecipeId"
-                  OnRecipeDropped="HandleRecipeDropped"
-                  OnRecipeClicked="HandleRecipeClicked" />
-        
-        <MealCard Date="selectedDate"
-                  MealType="MealType.Lunch"
-                  RecipeId="selectedMenuDay?.LunchRecipeId"
-                  OnRecipeDropped="HandleRecipeDropped"
-                  OnRecipeClicked="HandleRecipeClicked" />
-        
-        <MealCard Date="selectedDate"
-                  MealType="MealType.Dinner"
-                  RecipeId="selectedMenuDay?.DinnerRecipeId"
-                  OnRecipeDropped="HandleRecipeDropped"
-                  OnRecipeClicked="HandleRecipeClicked" />
-    </div>
+                <div class="view-switcher">
+                    <button type="button"
+                            class="view-btn @(currentView == MenuViewMode.Daily ? "active" : "")"
+                            @onclick="() => SetView(MenuViewMode.Daily)">
+                         Daily   
+                    </button>
 
-    <RecipeDetailsPanel SelectedRecipe="selectedRecipe" />
-    </div>
+                    <button type="button"
+                            class="view-btn @(currentView == MenuViewMode.Weekly ? "active" : "")"
+                            @onclick="() => SetView(MenuViewMode.Weekly)">
+                         Weekly   
+                    </button>
+
+                    <button type="button"
+                            class="view-btn @(currentView == MenuViewMode.Monthly ? "active" : "")"
+                            @onclick="() => SetView(MenuViewMode.Monthly)">
+                         Monthly    
+                    </button>
+                </div>
+
+                <p class="current-date">
+                    Date: <span>@selectedDate.ToString("MMMM d, yyyy")</span>
+                </p>
+            </header>
+
+            @if (selectedRecipe is null)
+            {
+                @if (currentView == MenuViewMode.Daily)
+                {
+                    <div class="daily-grid">
+                        <MealCard Date="selectedDate"
+                                  MealType="MealType.Breakfast"
+                                  RecipeId="selectedMenuDay?.BreakfastRecipeId"
+                                  OnRecipeDropped="HandleRecipeDropped"
+                                  OnRecipeClicked="HandleRecipeClicked"
+                                  OnRemoveFromMealClicked="HandleRemoveFromMealClicked" />
+                        
+                        <MealCard Date="selectedDate"
+                                  MealType="MealType.Lunch"
+                                  RecipeId="selectedMenuDay?.LunchRecipeId"
+                                  OnRecipeDropped="HandleRecipeDropped"
+                                  OnRecipeClicked="HandleRecipeClicked"
+                                  OnRemoveFromMealClicked="HandleRemoveFromMealClicked" />
+
+                        <MealCard Date="selectedDate"
+                                  MealType="MealType.Dinner"
+                                  RecipeId="selectedMenuDay?.DinnerRecipeId"
+                                  OnRecipeDropped="HandleRecipeDropped"
+                                  OnRecipeClicked="HandleRecipeClicked" 
+                                  OnRemoveFromMealClicked="HandleRemoveFromMealClicked"/>
+                    </div>
+                }
+                else if (currentView == MenuViewMode.Weekly)
+                {
+                    <WeeklyMenuGrid WeekStartDate="currentWeekStart"
+                                    MenuDays="weeklyMenu?.Days ?? new List<MenuDay>()"
+                                    OnRecipeDropped="HandleRecipeDropped"
+                                    OnRecipeClicked="HandleRecipeClicked"
+                                    OnPreviousWeek="PreviousWeek"
+                                    OnNextWeek="NextWeek" 
+                                    OnRemoveFromMealClicked="HandleRemoveFromMealClicked"/>
+                }
+                else if (currentView == MenuViewMode.Monthly)
+                {
+                    <MonthlyCalendarGrid CurrentMonth="currentMonth"
+                                         SelectedDate="selectedDate"
+                                         MenuDays="weeklyMenu?.Days ?? new List<MenuDay>()"
+                                         Recipes="recipes"
+                                         OnDateSelected="SelectDate"
+                                         OnRecipeClicked="HandleRecipeClicked"
+                                         OnPreviousMonth="PreviousMonth"
+                                         OnNextMonth="NextMonth" />
+                }
+            }
+            else
+             {
+                <div class="details-header">
+                    <button type="button
+                            class="back-btn"
+                            @onclick="CloseRecipeDetails">
+                         Back to Menu
+                    </button>
+                </div>
+
+                <RecipeDetailsPanel SelectedRecipe="selectedRecipe" />
+             }
+        </div>
+    </section>
 </div>
 
 @code {
@@ -66,9 +133,13 @@
     private int? draggedRecipeId;
 
     private DateOnly selectedDate = DateOnly.FromDateTime(DateTime.Today);
+    private DateOnly currentMonth = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, 1);
+    private DateOnly currentWeekStart = GetStartOfWeek(DateOnly.FromDateTime(DateTime.Today));
 
     private WeeklyMenu? weeklyMenu;
     private MenuDay? selectedMenuDay;
+
+    private MenuViewMode currentView = MenuViewMode.Daily;
 
     // lifecycle method that calls services, loads data
     // initializes state. 
@@ -82,6 +153,20 @@
         if (weeklyMenu is not null)
         {
             selectedMenuDay = weeklyMenu.Days.FirstOrDefault(d => d.Date == selectedDate);
+        }
+    }
+
+    private void SetView(MenuViewMode viewMode)
+    {
+        currentView = viewMode;
+
+        if (viewMode == MenuViewMode.Weekly)
+        {
+            currentWeekStart = GetStartOfWeek(selectedDate);
+        }
+        else if (viewMode == MenuViewMode.Monthly)
+        {
+            currentMonth = new DateOnly(selectedDate.Year, selectedDate.Month, 1);
         }
     }
 
@@ -132,12 +217,112 @@
         draggedRecipeId = null;
     }
 
+    // List to get days of the month
+    private List<DateOnly> GetDaysInMonth(DateOnly monthStart)
+    {
+        var days = new List<DateOnly>();
+        int daysInMonth = DateTime.DaysInMonth(monthStart.Year, monthStart.Month);
+
+        for (int day = 1; day <= daysInMonth; day++)
+        {
+            days.Add(new DateOnly(monthStart.Year, monthStart.Month, day));
+        }
+
+        return days;
+    }
+
+    // Helper method to find the MenuDay
+    private MenuDay? GetMenuDay(DateOnly date)
+    {
+        return weeklyMenu?.Days.FirstOrDefault(d => d.Date == date);
+    }
+
     // User clicks recipe in meal card
     // method: loads recipe from the database,
     // then sets the selectedRecipe and updates
     // Details panel
     private async Task HandleRecipeClicked(int recipeId)
-    {
-        selectedRecipe = await RecipeService.GetRecipe(recipeId);
+    {       
+        selectedRecipe = await RecipeService.GetRecipe(recipeId); 
     }
+
+    // Helper method to get recipe name
+    private string GetRecipeName(int recipeId)
+    {
+        return recipes.FirstOrDefault(r => r.Id == recipeId)?.Name ?? "Unknown";
+    }
+
+    // 
+    private void SelectDate(DateOnly date)
+    {
+        selectedDate = date;
+        currentWeekStart = GetStartOfWeek(date);
+        selectedMenuDay = weeklyMenu?.Days.FirstOrDefault(d => d.Date == selectedDate);
+        currentView = MenuViewMode.Daily;
+    }
+
+    // Helper method to get the previous month
+    private void PreviousMonth()
+    {
+        currentMonth = currentMonth.AddMonths(-1);
+    }
+
+    // Helper method to get the next month
+    private void NextMonth()
+    {
+        currentMonth = currentMonth.AddMonths(1);
+    }
+
+    // Enum for switching between Daily, Weekly, and Monthly recipe views
+    public enum MenuViewMode
+    {
+        Daily,
+        Weekly,
+        Monthly
+    }
+
+    // Helper method to get the first day of the week
+    private static DateOnly GetStartOfWeek(DateOnly date)
+    {
+        int diff = (int)date.DayOfWeek;
+        return date.AddDays(-diff);
+    }
+
+    // Helper to display the previous week
+    private void PreviousWeek()
+    {
+        currentWeekStart = currentWeekStart.AddDays(-7);
+    }
+
+    // Helper to display the next week
+    private void NextWeek()
+    {
+        currentWeekStart = currentWeekStart.AddDays(7);
+    }
+
+    private void CloseRecipeDetails()
+    {
+        selectedRecipe = null;
+    }
+
+    private async Task HandleRemoveFromMealClicked((DateOnly date, MealType mealType) args)
+    {
+        int userId = await RecipeService.GetCurrentUserId();
+
+        await WeeklyMenuService.RemoveRecipeFromMealAsync(userId, args.date, args.mealType);
+
+        weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
+
+        if (weeklyMenu is not null)
+        {
+            selectedMenuDay = weeklyMenu.Days.FirstOrDefault(d => d.Date == selectedDate);
+        }
+
+        if (selectedRecipe is not null)
+        {
+            selectedRecipe = null;
+        }
+    }
+
+
 }

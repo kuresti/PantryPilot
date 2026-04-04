@@ -33,6 +33,13 @@
     margin-bottom: 2rem;
 }
 
+/* ── Hint text ────────────────────────────────────────────────────────────── */
+.form-hint {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 0.6rem;
+}
+
 /* ── Error banner ─────────────────────────────────────────────────────────── */
 .form-error {
     background: #fdecea;
@@ -111,6 +118,24 @@
     background: white;
 }
 
+/* ── Toggle new ingredient button ─────────────────────────────────────────── */
+.btn-toggle-new {
+    background: none;
+    border: 1.5px solid #636CA8;
+    color: #636CA8;
+    border-radius: 6px;
+    padding: 0.4rem 0.55rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+}
+.btn-toggle-new:hover {
+    background: #636CA8;
+    color: white;
+}
+
 /* ── Ingredient rows ──────────────────────────────────────────────────────── */
 .ingredient-row {
     display: flex;
@@ -129,6 +154,11 @@
 }
 
 .ingredient-unit {
+    flex: 1;
+    min-width: 0;
+}
+
+.ingredient-cat {
     flex: 1;
     min-width: 0;
 }

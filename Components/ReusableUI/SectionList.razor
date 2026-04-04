@@ -4,9 +4,13 @@
 
     @if (Ingredients != null)
     {
-        <ul>@foreach (var ingredient in Ingredients)
+        <ul>
+            @foreach (var ingredient in Ingredients)
             {
-                <li>@ingredient</li>
+                <li class="grocery-item">
+                    <input type="checkbox" class="grocery-checkbox" />
+                    <span>@ingredient</span>
+                </li>
             }
         </ul>
     }

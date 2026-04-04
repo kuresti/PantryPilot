@@ -12,4 +12,6 @@ public interface IWeeklyMenuService
 
     Task<WeeklyMenu?> GetCurrentWeeklyMenuForUserAsync(int userId);
     Task<bool> AssignRecipeToMealAsync(int userId, DateOnly date, MealType mealType, int recipeId);
+
+    Task<bool> RemoveRecipeFromMealAsync(int userId, DateOnly date, MealType mealType);
 }

@@ -13,6 +13,7 @@
 @inject IWeeklyMenuService WeeklyMenuService
 @inject IRecipeService RecipeService
 @inject IIngredientService IngredientService
+@inject IJSRuntime JS
 
 <PageTitle>GroceryList</PageTitle>
 
@@ -24,7 +25,8 @@
    </div>
 
    <div class="content-container">
-      <SearchDropdown CustomClass="rounded-search m-0 p-0" />
+      <button class="btn btn-primary mb-3" @onclick="PrintList">Print List</button>
+   
       <div class="card-grid">
          @if (groupedIngredients.Count == 0)
          {
@@ -41,10 +43,47 @@
             }
          }
       </div>
+
+      <div class="print-area">
+         <div class="print-header">
+            <h2>PantryPilot Grocery List</h2>
+         </div>
+
+         @if (weeklyMenu?.Days != null && weeklyMenu.Days.Count > 0)
+         {
+            var firstDay = weeklyMenu.Days
+               .OrderBy(d => d.Date)
+               .First()
+               .Date;
+
+            <div class="print-subheader">
+               <p>Week of: @firstDay.ToString("MMM d, yyyy")</p>
+            </div>
+         }
+
+         <div class="print-list">
+            @foreach (var group in groupedIngredients)
+            {
+               <div class="feature-card">
+                  <h3>@group.Key.ToString()</h3>
+                  <ul>
+                     @foreach (var item in group.Value)
+                     {
+                        <li class="grocery-item">
+                           <input type="checkbox" />
+                           <span>@item</span>
+                        </li>
+                     }
+                  </ul>
+               </div>
+            }
+         </div>
+      </div>
    </div>
 </div>
 
 @code {
+   private WeeklyMenu? weeklyMenu;
    // Category -> List of display string like "2 cups of flour"
    private Dictionary<IngredientCategory, List<string>> groupedIngredients = new();
 
@@ -54,7 +93,7 @@
       int userId = await RecipeService.GetCurrentUserId();
 
       // Load the user's WeeklyMenu
-      var weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
+      weeklyMenu = await WeeklyMenuService.GetCurrentWeeklyMenuForUserAsync(userId);
       if (weeklyMenu is null || weeklyMenu.Days is null || weeklyMenu.Days.Count == 0)
       {
          return;
@@ -65,7 +104,6 @@
          .SelectMany(d => new int?[] { d.BreakfastRecipeId, d.LunchRecipeId, d.DinnerRecipeId })
          .Where(id => id.HasValue)
          .Select(id => id!.Value)
-         .Distinct()
          .ToList();
 
       if (recipeIds.Count == 0)
@@ -186,5 +224,11 @@
       return qty % 1 == 0 
       ? ((int)qty).ToString() // whole number, no decimals
       : qty.ToString(); // fraction, keep decimals 
+   }
+
+   // Print the grocery list using JavaScript interop
+   private void PrintList()
+   {
+      JS.InvokeVoidAsync("window.print");
    }
 }

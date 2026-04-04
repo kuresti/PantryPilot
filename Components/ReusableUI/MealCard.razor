@@ -14,22 +14,24 @@
     @if (assignedRecipe is not null)
     {
         <h2 class="meal-name">
+         
             <button type="button"                    class="recipe-link-button"
                     @onclick="() => OnRecipeClicked.InvokeAsync(assignedRecipe.Id)">
                 @assignedRecipe.Name
             </button>
         </h2>
 
-        <ul class="meal-features">
-            @foreach (var feature in recipeFeatures)
-            {
-                <li>@feature</li>
-            }
-        </ul>
+        <div class="meal-card-actions">
+        <button type="button"
+                class="meal-action-btn remove-btn"
+                @onclick="() => OnRemoveFromMealClicked.InvokeAsync((Date, MealType))">
+                Remove
+                </button>
+        </div>
 
-        <button type="button"                class="btn-cook"                @onclick="() => OnRecipeClicked.InvokeAsync(assignedRecipe.Id)">
+        @* <button type="button"                class="btn-cook"                @onclick="() => OnRecipeClicked.InvokeAsync(assignedRecipe.Id)">
             View Recipe
-        </button>
+        </button> *@
     }
     else
     {
@@ -38,9 +40,9 @@
             <li>Drag from recipe list</li>
         </ul>
 
-        <button type="button" class="btn-cook" disabled>
+        @* <button type="button" class="btn-cook" disabled>
             No Recipe Selected
-        </button>
+        </button> *@
     }
 
 </div>
@@ -56,6 +58,9 @@
 
     [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRecipeDropped { get; set; }
     [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
+
+    // Callback to Menu.razor for remove recipe from meal card.
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRemoveFromMealClicked { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {

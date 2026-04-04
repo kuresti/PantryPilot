@@ -1,0 +1,42 @@
+@* Container to hold meal cards for one day *@
+
+@using PantryPilot.Models
+@using System.ComponentModel
+
+<div class="day-menu-panel">
+    <h4 class="day-title">@Date.ToString("MMMM d, yyyy")</h4>
+
+    <div class="day-meals">
+        <MealCard Date="Date"
+                  MealType="MealType.Breakfast"
+                  RecipeId="MenuDay?.BreakfastRecipeId"
+                  OnRecipeDropped="OnRecipeDropped"
+                  OnRecipeClicked="OnRecipeClicked"
+                  OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
+
+        <MealCard Date="Date"
+                  MealType="MealType.Lunch"
+                  RecipeId="MenuDay?.LunchRecipeId"
+                  OnRecipeDropped="OnRecipeDropped"
+                  OnRecipeClicked="OnRecipeClicked"
+                  OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
+                
+        <MealCard Date="Date"
+                  MealType="MealType.Dinner"
+                  RecipeId="MenuDay?.DinnerRecipeId"
+                  OnRecipeDropped="OnRecipeDropped"
+                  OnRecipeClicked="OnRecipeClicked"
+                  OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
+    </div>
+</div>
+
+@code {
+    [Parameter] public DateOnly Date { get; set; }
+    [Parameter] public MenuDay? MenuDay { get; set; }
+
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRecipeDropped { get; set; }
+
+    [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
+
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRemoveFromMealClicked { get; set; }
+}

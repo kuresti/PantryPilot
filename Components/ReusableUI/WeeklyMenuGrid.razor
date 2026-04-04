@@ -1,0 +1,67 @@
+@* Displays a weekly menu *@
+@using PantryPilot.Models
+
+<div class="weekly-view">
+    <div class="weekly-header">
+        <button type="button"
+                class="week-nav-btn"
+                @onclick="() => OnPreviousWeek.InvokeAsync()">
+            Previous Week   
+        </button>
+
+        <h3>@GetWeekRangeText()</h3>
+
+        <button type="button"
+                class="week-nav-btn"
+                @onclick="() => OnNextWeek.InvokeAsync()">
+            Next Week    
+        </button>
+    </div>
+
+    <div class="weekly-grid">
+        @foreach (var date in GetWeekDates())
+        {
+            var day = GetMenuDay(date);
+
+            <DayMenuPanel Date="date"
+                          MenuDay="day"
+                          OnRecipeDropped="OnRecipeDropped"
+                          OnRecipeClicked="OnRecipeClicked"
+                          OnRemoveFromMealClicked="OnRemoveFromMealClicked" />
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public DateOnly WeekStartDate { get; set; }
+    [Parameter] public List<MenuDay> MenuDays { get; set; } = new();
+
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRecipeDropped { get; set; }
+    [Parameter] public EventCallback<int> OnRecipeClicked { get; set; }
+    [Parameter] public EventCallback OnPreviousWeek { get; set; }
+    [Parameter] public EventCallback OnNextWeek { get; set; }
+    [Parameter] public EventCallback<(DateOnly date, MealType mealType)> OnRemoveFromMealClicked { get; set; }
+
+    private List<DateOnly> GetWeekDates()
+    {
+        var dates = new List<DateOnly>();
+
+        for (int i = 0; i < 7; i++)
+        {
+            dates.Add(WeekStartDate.AddDays(i));
+        }
+
+        return dates;
+    }
+
+    private MenuDay? GetMenuDay(DateOnly date)
+    {
+        return MenuDays.FirstOrDefault(d => d.Date == date);
+    }
+
+    private string GetWeekRangeText()
+    {
+        var endDate = WeekStartDate.AddDays(6);
+        return $"{WeekStartDate:MMM d} - {endDate:MMM d, yyyy}";
+    }
+}

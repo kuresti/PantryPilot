@@ -1,0 +1,91 @@
+/* Styling for monthly calendar*/
+
+.monthly-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.month-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.month-nav-btn {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.weekday-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.monthly-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.75rem;
+}
+
+.month-cell {
+    min-height: 150px;
+    border: 1px solid #ddd;
+    border-radius: 14 px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: white;
+}
+
+.empty-cell {
+    background: transparent;
+    border: none;
+}
+
+.month-cell-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.day-number-button {
+    border: none;
+    background: none;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.month-cell-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.meal-summary {
+    font-size: 0.9rem;
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.recipe-link-button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: underline;
+}
+
+.selected-day {
+    outline: 2px solid #999;
+}
